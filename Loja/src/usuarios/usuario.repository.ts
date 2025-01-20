@@ -1,50 +1,50 @@
 import { Injectable } from "@nestjs/common";
-import { UsuarioEntity } from "./validacao/usuario.entity";
+import { UsuarioEntity } from "./usuario.entity";
 
 @Injectable()
-export class UsuarioRepository{
+export class UsuarioRepository {
 
 	private usuarios: UsuarioEntity[] = [];
 
-	private buscaPorId(id: string){
-		
+	private buscaPorId(id: string) {
+
 		const possivelUsuario = this.usuarios.find(
 			usuarioSalvo => usuarioSalvo.id === id
 		)
 
-		if(!possivelUsuario){
+		if (!possivelUsuario) {
 			throw new Error('Usuário não encontrado');
 		}
 
 		return possivelUsuario;
 	}
 
-	async salvar(usuario: UsuarioEntity){
+	async salvar(usuario: UsuarioEntity) {
 
 		this.usuarios.push(usuario);
 	}
 
-	async listar(){
+	async listar() {
 
 		return this.usuarios;
 	}
 
-	async existeComEmail(email: string){
+	async existeComEmail(email: string) {
 
 		const possivelUsuario = this.usuarios.find(
 			usuario => usuario.email === email
 		);
-		
+
 		return possivelUsuario !== undefined;
 	}
 
-	async atualizar(id: string, dadosDeAtualizacao: Partial<UsuarioEntity>){
+	async atualizar(id: string, dadosDeAtualizacao: Partial<UsuarioEntity>) {
 
 		const usuario = this.buscaPorId(id);
 
-		Object.entries(dadosDeAtualizacao).forEach(([chave,valor]) => {
+		Object.entries(dadosDeAtualizacao).forEach(([chave, valor]) => {
 
-			if(chave === 'id'){
+			if (chave === 'id') {
 				return;
 			}
 
@@ -55,7 +55,7 @@ export class UsuarioRepository{
 		return usuario;
 	}
 
-	async deletar(id: string){
+	async deletar(id: string) {
 
 		const usuario = this.buscaPorId(id);
 
