@@ -1,16 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
-import { UsuarioRepository } from "../usuario.repository";
+import { Repository } from "typeorm";
+import { UsuarioEntity } from "../usuario.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class EmailEhUnicoValidator implements ValidatorConstraintInterface{
 	
-	constructor(private usuarioRepository: UsuarioRepository){}
+	constructor(
+
+		@InjectRepository(UsuarioEntity)
+		private usuarioRepository: Repository<UsuarioEntity>
+		
+	){}
 
 	async validate(value: any, validationArguments?: ValidationArguments): Promise<boolean>{
 	
-		const usuarioComEmailExiste = await this.usuarioRepository.existeComEmail(value);
+		const usuarioComEmailExiste = await this.usuarioRepository.findOneBy({email: value});
 
 		return !usuarioComEmailExiste;
 	}
