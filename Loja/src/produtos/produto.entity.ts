@@ -6,6 +6,8 @@ import {
 	PrimaryGeneratedColumn, 
 	Column,
 	CreateDateColumn, 
+	UpdateDateColumn,
+	DeleteDateColumn,
 } from "typeorm";
 
 
@@ -33,16 +35,15 @@ export class ProdutoEntity{
 	@Column({name: 'categoria', length: 100, nullable: false})
 	categoria: string;
 
+	@CreateDateColumn({name: 'created_at'})
+	created_at: string;
+	
+	@UpdateDateColumn({name: 'updated_at'})
+	updated_at: string;
+	
+	@DeleteDateColumn({name: 'deleted_at'})
+	deleted_at: string;
 	
 	// caracteristicas: ProdutoCaracteristicaEntity[];
 	// imagens: ProdutoImagemEntity[];
-
-	@CreateDateColumn({name: 'created_at'})
-	created_at: string;
-
-	@CreateDateColumn({name: 'updated_at'})
-	updated_at: string;
-
-	@CreateDateColumn({name: 'deleted_at'})
-	deleted_at: string;
 }

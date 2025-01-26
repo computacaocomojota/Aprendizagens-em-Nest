@@ -1,20 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
-import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
-import { ProdutoRepository } from "./produto.repository";
-import { ProdutoEntity } from "./produto.entity";
+import { 
+	Body, 
+	Controller, 
+	Delete, 
+	Get, 
+	Param, 
+	Post, 
+	Put 
+} from "@nestjs/common";
 import { randomUUID } from 'node:crypto';
 
-@Controller('produtos')
+import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
+import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
+import { ProdutoEntity } from "./produto.entity";
+import { ProdutoService } from "./produto.service";
+
+@Controller('/produtos')
 export class ProdutoController {
 
-	constructor(private produtoRepository: ProdutoRepository) { }
+	constructor(
 
-	@Get()
-	async listarProdutos() {
+		private produtoService: ProdutoService,
 
-		return this.produtoRepository.listar();
-	}
+	) {}
 
 	@Post()
 	async criarProduto(@Body() dadosDoProduto: CriarProdutoDTO) {
@@ -31,7 +38,7 @@ export class ProdutoController {
 		// produtoEntity.caracteristicas = dadosDoProduto.caracteristicas;
 		// produtoEntity.imagens = dadosDoProduto.imagens;
 
-		const produtoSalvo = await this.produtoRepository.salvar(produtoEntity);
+		const produtoSalvo = await this.produtoService.criarProduto(produtoEntity);
 
 		return{
 			
@@ -40,11 +47,20 @@ export class ProdutoController {
 		}
 		
 	}
+	
+	@Get()
+	async listarProdutos() {
+
+		const produtosSalvos = await this.produtoService.listarProdutos();
+	
+		return produtosSalvos;
+	}
+
 
 	@Put('/:id')
 	async atualizarProduto(@Param('id') id: string, @Body() dadosDeAtualizacao: AtualizarProdutoDTO){
 
-		const produtoAtualizado = await this.produtoRepository.atualizar(id,dadosDeAtualizacao);
+		const produtoAtualizado = await this.produtoService.atualizarProduto(id, dadosDeAtualizacao);
 
 		return{
 
@@ -56,7 +72,7 @@ export class ProdutoController {
 	@Delete('/:id')
 	async deletarProduto(@Param('id') id: string) {
 
-		const produtoDeletado = await this.produtoRepository.deletar(id);
+		const produtoDeletado = await this.produtoService.deletarProduto(id);
 
 		return {
 
