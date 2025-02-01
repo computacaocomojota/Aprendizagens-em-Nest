@@ -27,17 +27,18 @@ export class ProdutoController {
 	async criarProduto(@Body() dadosDoProduto: CriarProdutoDTO) {
 
 		const produtoEntity = new ProdutoEntity();
+		const usuario = await this.produtoService.buscaUsuarioPorId(dadosDoProduto.usuarioId);
 		
 		produtoEntity.id = randomUUID();
-		produtoEntity.usuarioId = dadosDoProduto.usuarioId;
 		produtoEntity.nome = dadosDoProduto.nome;
 		produtoEntity.valor = dadosDoProduto.valor;
 		produtoEntity.quantidade = dadosDoProduto.quantidade;
 		produtoEntity.descricao = dadosDoProduto.descricao;
 		produtoEntity.categoria = dadosDoProduto.categoria;
-		// produtoEntity.caracteristicas = dadosDoProduto.caracteristicas;
-		// produtoEntity.imagens = dadosDoProduto.imagens;
-
+		produtoEntity.caracteristicas = dadosDoProduto.caracteristicas
+		produtoEntity.imagens = dadosDoProduto.imagens
+		produtoEntity.usuario = usuario;
+		
 		const produtoSalvo = await this.produtoService.criarProduto(produtoEntity);
 
 		return{
