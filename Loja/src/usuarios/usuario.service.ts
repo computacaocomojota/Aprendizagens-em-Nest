@@ -4,6 +4,7 @@ import { ListarUsuarioDTO } from "./dto/ListarUsuario.dto";
 import { UsuarioEntity } from "./usuario.entity";
 import { Repository } from "typeorm";
 import { AtualizarUsuarioDTO } from "./dto/AtualizarUsuario.dto";
+import { ProdutoEntity } from "src/produtos/produto.entity";
 
 @Injectable()
 export class UsuarioService{
@@ -11,7 +12,10 @@ export class UsuarioService{
 	constructor(
 
 		@InjectRepository(UsuarioEntity)
-		private readonly usuarioRepository: Repository<UsuarioEntity>
+		private readonly usuarioRepository: Repository<UsuarioEntity>,
+
+		@InjectRepository(ProdutoEntity)
+		private readonly produtoRepository: Repository<ProdutoEntity>
 
 	){}
 
@@ -32,6 +36,15 @@ export class UsuarioService{
 
 		return usuariosLista;
 
+	}
+
+	async listarProdutosDoUsuario(id: string){
+
+		return await this.produtoRepository.find({ 
+			
+			where: { usuarioId: { id } },
+			relations: ['usuarioId']
+		});
 	}
 
 	async atualizarUsuario(id: string, dadosDeAtualizacao: AtualizarUsuarioDTO){

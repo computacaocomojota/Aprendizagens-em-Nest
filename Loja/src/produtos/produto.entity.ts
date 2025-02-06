@@ -23,9 +23,9 @@ export class ProdutoEntity{
 	@ManyToOne(() => UsuarioEntity, 
 		
 		(usuarioEntity) => usuarioEntity.produtos,
-		{ orphanedRowAction: 'delete',onDelete: 'CASCADE', onUpdate: 'CASCADE' }
+		{ orphanedRowAction: 'delete',onDelete: 'CASCADE' }
 	)
-	usuario: UsuarioEntity;
+	usuarioId: UsuarioEntity;
 
 	@Column({name: 'nome', length: 100, nullable: false})
 	nome: string;

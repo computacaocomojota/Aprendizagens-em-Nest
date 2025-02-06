@@ -18,7 +18,7 @@ export class ProdutoService{
 	
 	){}
 
-	async buscaUsuarioPorId(usuarioId: string){
+	async buscaUsuarioPorId(usuarioId: string): Promise<UsuarioEntity>{
 
 		const usuario = await this.usuarioRepository.findOneBy({id: usuarioId}); 
 		if (!usuario) {
@@ -35,12 +35,12 @@ export class ProdutoService{
 
 	async listarProdutos(){
 
-		await this.produtoRepository.find();
+		return await this.produtoRepository.find();
 	}
 
 	async atualizarProduto(id: string, produto: AtualizarProdutoDTO){
 
-		await this.produtoRepository.update(id, produto);
+		await this.produtoRepository.update(id, {...produto, usuarioId: { id: produto.usuarioId }});
 	}
 
 	async deletarProduto(id: string){

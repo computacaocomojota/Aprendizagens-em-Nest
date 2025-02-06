@@ -12,6 +12,8 @@ import {
 	ValidateNested 
 } from 'class-validator';
 import { ProdutoEntity } from '../produto.entity';
+import { UUID } from 'node:crypto';
+import { UsuarioEntity } from 'src/usuarios/usuario.entity';
 
 export class CaracteristicaProdutoDTO{
 	
@@ -45,7 +47,8 @@ export class ImagemProdutoDTO{
 export class CriarProdutoDTO {
 	
 	@IsUUID(undefined, { message: 'ID de usuário inválido' })
-	usuarioId: string;
+	@IsNotEmpty({ message: 'ID de usuário não pode ser vazio' })
+	usuarioId: UsuarioEntity;
 
 	@IsString()
 	@IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
