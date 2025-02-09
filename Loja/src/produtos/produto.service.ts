@@ -40,7 +40,7 @@ export class ProdutoService{
 
 	async atualizarProduto(id: string, produto: AtualizarProdutoDTO){
 
-		await this.produtoRepository.update(id, {...produto, usuarioId: { id: produto.usuarioId }});
+		await this.produtoRepository.update(id, {...produto, usuario: { id: produto.usuario }});
 	}
 
 	async deletarProduto(id: string){

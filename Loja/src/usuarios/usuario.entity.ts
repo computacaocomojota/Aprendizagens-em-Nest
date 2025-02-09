@@ -24,7 +24,7 @@ export class UsuarioEntity{
 	@Column({name: 'senha', length: 100, nullable: false})
 	senha: string;
 
-	@OneToMany(() => ProdutoEntity, (produtoEntity) => produtoEntity.usuarioId,{cascade: true, eager: true})
+	@OneToMany(() => ProdutoEntity, (produtoEntity) => produtoEntity.usuario,{ cascade: true, eager: true })
 	produtos: ProdutoEntity[];
 
 	@CreateDateColumn({name: 'created_at'})

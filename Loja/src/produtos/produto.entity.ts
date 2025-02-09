@@ -11,6 +11,7 @@ import {
 	DeleteDateColumn,
 	OneToMany,
 	ManyToOne,
+	JoinColumn,
 } from "typeorm";
 
 
@@ -20,12 +21,12 @@ export class ProdutoEntity{
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@ManyToOne(() => UsuarioEntity, 
+	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.produtos,{ 
 		
-		(usuarioEntity) => usuarioEntity.produtos,
-		{ orphanedRowAction: 'delete',onDelete: 'CASCADE' }
-	)
-	usuarioId: UsuarioEntity;
+		orphanedRowAction: 'delete',onDelete: 'CASCADE' 
+	})
+	@JoinColumn({name: 'usuario_id'})
+	usuario: UsuarioEntity;
 
 	@Column({name: 'nome', length: 100, nullable: false})
 	nome: string;
@@ -42,18 +43,16 @@ export class ProdutoEntity{
 	@Column({name: 'categoria', length: 100, nullable: false})
 	categoria: string;
 
-	@OneToMany(() => ProdutoCaracteristicaEntity, 
-		
-		(produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto, 
-		{ cascade: true, eager: true }
-	)
+	@OneToMany(() => ProdutoCaracteristicaEntity,(produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto, { 
+
+		cascade: true, eager: true 
+	})
 	caracteristicas: ProdutoCaracteristicaEntity[];
 
-	@OneToMany(() => ProdutoImagemEntity, 
-	
-		(produtoImagemEntity) => produtoImagemEntity.produto,
-		{ cascade: true, eager: true }
-	)
+	@OneToMany(() => ProdutoImagemEntity,(produtoImagemEntity) => produtoImagemEntity.produto,{ 
+		
+		cascade: true, eager: true 
+	})
 	imagens: ProdutoImagemEntity[];
 
 	@CreateDateColumn({name: 'created_at'})

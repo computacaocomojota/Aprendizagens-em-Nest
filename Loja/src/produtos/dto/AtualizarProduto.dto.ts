@@ -20,7 +20,7 @@ export class AtualizarProdutoDTO {
 	id: string
 
 	@IsUUID(undefined, { message: 'ID de usuário inválido' })
-	usuarioId: string
+	usuario: string
 
 	@IsString()
 	@IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })

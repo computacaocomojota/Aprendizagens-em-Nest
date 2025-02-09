@@ -42,7 +42,7 @@ export class UsuarioService{
 
 		return await this.produtoRepository.find({ 
 			
-			where: { usuarioId: { id } },
+			where: { usuario: { id } },
 			relations: ['usuarioId']
 		});
 	}

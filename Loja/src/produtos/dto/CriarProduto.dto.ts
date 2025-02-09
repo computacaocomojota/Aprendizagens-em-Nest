@@ -48,7 +48,7 @@ export class CriarProdutoDTO {
 	
 	@IsUUID(undefined, { message: 'ID de usuário inválido' })
 	@IsNotEmpty({ message: 'ID de usuário não pode ser vazio' })
-	usuarioId: UsuarioEntity;
+	usuario: UsuarioEntity;
 
 	@IsString()
 	@IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
