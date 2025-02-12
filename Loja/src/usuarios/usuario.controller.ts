@@ -52,15 +52,6 @@ export class UsuarioController {
 
 	}
 
-	@Get('/:id')
-	async listarProdutosDoUsuario(@Param('id') id: string) {	
-
-		const usuarioProdutos = await this.usuarioService.listarProdutosDoUsuario(id);
-
-		return usuarioProdutos;
-	}
-
-
 	@Put('/:id')
 	async atualizaUsuario(@Param('id') id: string, @Body() dadosDeAtualizacao: AtualizarUsuarioDTO) {
 

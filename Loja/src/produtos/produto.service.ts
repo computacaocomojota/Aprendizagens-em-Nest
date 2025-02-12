@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProdutoEntity } from "./produto.entity";
-import { UsuarioEntity } from "src/usuarios/usuario.entity";
 import { Repository } from "typeorm";
 import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
 
@@ -10,23 +9,10 @@ export class ProdutoService{
 
 	constructor(
 
-		@InjectRepository(UsuarioEntity)
-		private readonly usuarioRepository: Repository<UsuarioEntity>,
-		
 		@InjectRepository(ProdutoEntity)
 		private readonly produtoRepository: Repository<ProdutoEntity>
 	
 	){}
-
-	async buscaUsuarioPorId(usuarioId: string): Promise<UsuarioEntity>{
-
-		const usuario = await this.usuarioRepository.findOneBy({id: usuarioId}); 
-		if (!usuario) {
-      throw new Error('Usuário não encontrado');
-    }
-
-		return usuario;
-	}
 
 	async criarProduto(produtoEntity: ProdutoEntity){
 
@@ -40,7 +26,7 @@ export class ProdutoService{
 
 	async atualizarProduto(id: string, produto: AtualizarProdutoDTO){
 
-		await this.produtoRepository.update(id, {...produto, usuario: { id: produto.usuario }});
+		await this.produtoRepository.update(id, produto);
 	}
 
 	async deletarProduto(id: string){

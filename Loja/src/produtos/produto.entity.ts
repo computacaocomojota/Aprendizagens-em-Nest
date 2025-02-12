@@ -10,8 +10,6 @@ import {
 	UpdateDateColumn,
 	DeleteDateColumn,
 	OneToMany,
-	ManyToOne,
-	JoinColumn,
 } from "typeorm";
 
 
@@ -20,13 +18,6 @@ export class ProdutoEntity{
 
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
-
-	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.produtos,{ 
-		
-		orphanedRowAction: 'delete',onDelete: 'CASCADE' 
-	})
-	@JoinColumn({name: 'usuario_id'})
-	usuario: UsuarioEntity;
 
 	@Column({name: 'nome', length: 100, nullable: false})
 	nome: string;
@@ -43,6 +34,15 @@ export class ProdutoEntity{
 	@Column({name: 'categoria', length: 100, nullable: false})
 	categoria: string;
 
+	@CreateDateColumn({name: 'created_at'})
+	created_at: string;
+	
+	@UpdateDateColumn({name: 'updated_at'})
+	updated_at: string;
+	
+	@DeleteDateColumn({name: 'deleted_at'})
+	deleted_at: string;
+
 	@OneToMany(() => ProdutoCaracteristicaEntity,(produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto, { 
 
 		cascade: true, eager: true 
@@ -54,14 +54,5 @@ export class ProdutoEntity{
 		cascade: true, eager: true 
 	})
 	imagens: ProdutoImagemEntity[];
-
-	@CreateDateColumn({name: 'created_at'})
-	created_at: string;
-	
-	@UpdateDateColumn({name: 'updated_at'})
-	updated_at: string;
-	
-	@DeleteDateColumn({name: 'deleted_at'})
-	deleted_at: string;
 
 }
