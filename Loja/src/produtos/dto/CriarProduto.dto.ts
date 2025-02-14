@@ -12,7 +12,6 @@ import {
 	ValidateNested 
 } from 'class-validator';
 import { ProdutoEntity } from '../produto.entity';
-import { UUID } from 'node:crypto';
 import { UsuarioEntity } from 'src/usuarios/usuario.entity';
 
 export class CaracteristicaProdutoDTO{
@@ -60,7 +59,7 @@ export class CriarProdutoDTO {
 
 	@IsNumber()
 	@Min(0,{ message: 'quantidade miníma inválida' })
-	quantidade: number
+	quantidadeDisponivel: number
 
 	@IsString()
 	@IsNotEmpty({ message: 'Descrição do Produto não pode ser vazia' })

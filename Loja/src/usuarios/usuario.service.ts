@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ListarUsuarioDTO } from "./dto/ListarUsuario.dto";
-import { UsuarioEntity } from "./usuario.entity";
 import { Repository } from "typeorm";
+import { UsuarioEntity } from "./usuario.entity";
+import { CriarUsuarioDTO } from "./dto/CriarUsuario.dto";
+import { ListarUsuarioDTO } from "./dto/ListarUsuario.dto";
 import { AtualizarUsuarioDTO } from "./dto/AtualizarUsuario.dto";
+import { randomUUID } from "crypto";
 
 @Injectable()
 export class UsuarioService{
@@ -15,9 +17,15 @@ export class UsuarioService{
 
 	){}
 
-	async criarUsuario(usuarioEntity: UsuarioEntity){
+	async criarUsuario(dadosDoUsuario: CriarUsuarioDTO){
 
-		await this.usuarioRepository.save(usuarioEntity);
+		const usuarioEntity = new UsuarioEntity();
+
+		usuarioEntity.nome = dadosDoUsuario.nome;
+		usuarioEntity.email = dadosDoUsuario.email;
+		usuarioEntity.senha = dadosDoUsuario.senha;
+		
+		return await this.usuarioRepository.save(usuarioEntity);
 
 	}
 

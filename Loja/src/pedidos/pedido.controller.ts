@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PedidosService } from './pedido.service';
-import { CreatePedidoDto } from './dto/CriarPedido.dto';
-import { UpdatePedidoDto } from './dto/AtualizarPedido.dto';
+import { CriarPedidoDto } from './dto/CriarPedido.dto';
+import { AtualizarPedidoDto } from './dto/AtualizarPedido.dto';
 
 @Controller('/pedidos')
 export class PedidosController {
@@ -9,7 +9,7 @@ export class PedidosController {
   constructor(private readonly pedidosService: PedidosService) { }
 
   @Post()
-  create(@Body() createPedidoDto: CreatePedidoDto) {
+  create(@Body() createPedidoDto: CriarPedidoDto) {
     return this.pedidosService.create(createPedidoDto);
   }
 
@@ -24,7 +24,7 @@ export class PedidosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
+  update(@Param('id') id: string, @Body() updatePedidoDto: AtualizarPedidoDto) {
     return this.pedidosService.update(+id, updatePedidoDto);
   }
 

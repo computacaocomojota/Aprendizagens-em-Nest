@@ -12,14 +12,12 @@ class ListarImagemProdutoDTO{
 
 export class ListarProdutoDTO{
 
-	id: string;
-  usuarioId: string;
-  nome: string;
-  valor: number;
-  quantidade: number;
-  descricao: string;
-  categoria: string;
-  caracteristicas: ListarCaracteristicaProdutoDTO[];
-  imagens: ListarImagemProdutoDTO[];
+  constructor(
 
+    readonly id: string,
+    readonly nome: string,
+    readonly caracteristicas: ListarCaracteristicaProdutoDTO[],
+    readonly imagens: ListarImagemProdutoDTO[],
+
+  ){}
 }

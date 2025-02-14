@@ -7,11 +7,9 @@ import {
 	Post, 
 	Put 
 } from "@nestjs/common";
-import { randomUUID } from 'node:crypto';
 
 import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
 import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
-import { ProdutoEntity } from "./produto.entity";
 import { ProdutoService } from "./produto.service";
 
 @Controller('/produtos')
@@ -25,19 +23,8 @@ export class ProdutoController {
 
 	@Post()
 	async criarProduto(@Body() dadosDoProduto: CriarProdutoDTO) {
-
-		const produtoEntity = new ProdutoEntity();
-		
-		produtoEntity.id = randomUUID();
-		produtoEntity.nome = dadosDoProduto.nome;
-		produtoEntity.valor = dadosDoProduto.valor;
-		produtoEntity.quantidade = dadosDoProduto.quantidade;
-		produtoEntity.descricao = dadosDoProduto.descricao;
-		produtoEntity.categoria = dadosDoProduto.categoria;
-		produtoEntity.caracteristicas = dadosDoProduto.caracteristicas
-		produtoEntity.imagens = dadosDoProduto.imagens
-		
-		const produtoSalvo = await this.produtoService.criarProduto(produtoEntity);
+	
+		const produtoSalvo = await this.produtoService.criarProduto(dadosDoProduto);
 
 		return{
 			
@@ -50,9 +37,8 @@ export class ProdutoController {
 	@Get()
 	async listarProdutos() {
 
-		const produtosSalvos = await this.produtoService.listarProdutos();
-	
-		return produtosSalvos;
+		return this.produtoService.listarProdutos();
+
 	}
 
 
