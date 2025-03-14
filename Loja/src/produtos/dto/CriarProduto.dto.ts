@@ -12,7 +12,7 @@ import {
 	ValidateNested 
 } from 'class-validator';
 import { ProdutoEntity } from '../produto.entity';
-import { UsuarioEntity } from 'src/usuarios/usuario.entity';
+import { UsuarioEntity } from '../../usuarios/usuario.entity';
 
 export class CaracteristicaProdutoDTO{
 	

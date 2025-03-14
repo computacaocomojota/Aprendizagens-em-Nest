@@ -1,26 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { CriarPedidoDto } from './dto/CriarPedido.dto';
-import { AtualizarPedidoDto } from './dto/AtualizarPedido.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UsuarioEntity } from '../usuarios/usuario.entity';
+import { PedidoEntity } from './pedido.entity';
+import { CriarPedidoDTO } from './dto/CriarPedido.dto';
+import { ListarPedidoDTO } from './dto/ListarPedido.dto';
+import { AtualizarPedidoDTO } from './dto/AtualizarPedido.dto';
+import { StatusPedido } from './enum/statuspedido.enum';
 
 @Injectable()
 export class PedidosService {
-  create(createPedidoDto: CriarPedidoDto) {
-    return 'This action adds a new pedido';
+  
+  constructor(
+
+    @InjectRepository(PedidoEntity)
+    private readonly pedidoRepository: Repository<PedidoEntity>,
+
+    @InjectRepository(UsuarioEntity)
+    private readonly usuarioRepository: Repository<UsuarioEntity>
+
+  ){}
+
+  async criarPedido(usuarioId: string){
+
+    const usuario = await this.usuarioRepository.findOneBy({id: usuarioId})
+    const pedidoEntity = new PedidoEntity()
+
+    pedidoEntity.valorTotal = 0
+    pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
+    pedidoEntity.usuario = usuario
+
+    const pedidoSalvo = await this.pedidoRepository.save(pedidoEntity)
+
+    return pedidoSalvo
+
   }
 
-  findAll() {
-    return `This action returns all pedidos`;
+  async listarPedido(){
+
+    const pedidosSalvos = await this.pedidoRepository.find();
+
+    const pedidosLista = pedidosSalvos.map(
+     
+      (pedido) => console.log(pedido)
+    )
+
+    
+
+    return pedidosLista;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pedido`;
+  async atualizarPedido(id:string, dadosDeAtualizacao: AtualizarPedidoDTO){
+
+    await this.pedidoRepository.update(id,dadosDeAtualizacao)
   }
 
-  update(id: number, updatePedidoDto: AtualizarPedidoDto) {
-    return `This action updates a #${id} pedido`;
-  }
+  async deletarPedido(id:string){
 
-  remove(id: number) {
-    return `This action removes a #${id} pedido`;
+    await this.pedidoRepository.delete(id)
   }
 }

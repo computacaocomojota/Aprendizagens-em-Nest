@@ -8,18 +8,14 @@ import {
 	Put 
 } from "@nestjs/common";
 
-import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
-import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
 import { ProdutoService } from "./produto.service";
+import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
+import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
 
 @Controller('/produtos')
 export class ProdutoController {
 
-	constructor(
-
-		private produtoService: ProdutoService,
-
-	) {}
+	constructor(private readonly produtoService: ProdutoService){}
 
 	@Post()
 	async criarProduto(@Body() dadosDoProduto: CriarProdutoDTO) {

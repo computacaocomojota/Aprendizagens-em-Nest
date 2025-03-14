@@ -1,4 +1,3 @@
-import { UsuarioEntity } from "src/usuarios/usuario.entity";
 import { ProdutoCaracteristicaEntity } from "./produto-caracteristica.entity";
 import { ProdutoImagemEntity } from "./produto-imagem.entity";
 

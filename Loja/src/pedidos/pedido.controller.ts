@@ -1,35 +1,63 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Post, 
+  Body,
+  Get,
+  Put,
+  Param,
+  Delete
+} from '@nestjs/common';
+
 import { PedidosService } from './pedido.service';
-import { CriarPedidoDto } from './dto/CriarPedido.dto';
-import { AtualizarPedidoDto } from './dto/AtualizarPedido.dto';
+import { CriarPedidoDTO } from './dto/CriarPedido.dto';
+import { ListarPedidoDTO } from './dto/ListarPedido.dto';
+import { AtualizarPedidoDTO } from './dto/AtualizarPedido.dto';
 
 @Controller('/pedidos')
-export class PedidosController {
+export class PedidoController {
 
-  constructor(private readonly pedidosService: PedidosService) { }
+  constructor(private readonly pedidoService: PedidosService) { }
 
   @Post()
-  create(@Body() createPedidoDto: CriarPedidoDto) {
-    return this.pedidosService.create(createPedidoDto);
+  async criarPedido(@Body() dadosDoPedido) {
+    
+    const pedidoSalvo = await this.pedidoService.criarPedido(dadosDoPedido.usuarioId)
+
+    return {
+
+      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.usuario.id,pedidoSalvo.valorTotal,pedidoSalvo.status),
+      message: 'Pedido criado com sucesso',
+    }
   }
 
   @Get()
-  findAll() {
-    return this.pedidosService.findAll();
+  async listarPedidos(){
+
+    return this.pedidoService.listarPedido()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pedidosService.findOne(+id);
+  @Put('/:id')
+  async atualizarPedido(@Param('id') id:string, @Body() dadosDeAtualizacao){
+
+    const pedidoAualizado = await this.pedidoService.atualizarPedido(id,dadosDeAtualizacao)
+
+    return {
+
+      pedidoAualizado: pedidoAualizado,
+      message:  'Pedido atualizado com sucesso'
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: AtualizarPedidoDto) {
-    return this.pedidosService.update(+id, updatePedidoDto);
+  @Delete('/:id')
+  async deletarPedido(@Param('id') id:string){
+
+    const pedidoDeletado = await this.pedidoService.deletarPedido(id)
+    
+    return {
+
+      pedidoDeletado: pedidoDeletado,
+      message: 'Pedido deletado com sucesso'
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidosService.remove(+id);
-  }
 }

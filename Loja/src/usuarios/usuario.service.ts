@@ -5,7 +5,6 @@ import { UsuarioEntity } from "./usuario.entity";
 import { CriarUsuarioDTO } from "./dto/CriarUsuario.dto";
 import { ListarUsuarioDTO } from "./dto/ListarUsuario.dto";
 import { AtualizarUsuarioDTO } from "./dto/AtualizarUsuario.dto";
-import { randomUUID } from "crypto";
 
 @Injectable()
 export class UsuarioService{
