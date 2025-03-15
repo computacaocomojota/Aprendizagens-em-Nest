@@ -6,7 +6,7 @@ import {
 
 } from "class-validator";
 
-export class UpdateTempleteDTO{
+export class UpdateCategoryDTO{
 
 	@IsOptional()
 	@IsNotEmpty({ message: 'Name is required' })

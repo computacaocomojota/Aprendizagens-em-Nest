@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  nest:
-    build: .
-    container_name: nest-backend
-    depends_on:
-      - postgres
-    ports:
-      - "3000:3000"
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_ADMIN_EMAIL: ${DB_ADMIN_EMAIL}
-    networks:
-      - postgres
 
   postgres:
     image: postgres:latest

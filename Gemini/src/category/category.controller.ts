@@ -1,5 +1,6 @@
 import { 
 	
+	Body,
 	Controller, 
 	Delete, 
 	Get, 
@@ -10,28 +11,66 @@ import {
 } from "@nestjs/common";
 
 import { CategoryService } from "./category.service";
+import { ListCategoryDTO } from "./dto/ListCategoryDTO";
+import { CreateCategoryDTO } from "./dto/CreateCategoryDTO";
+import { UpdateCategoryDTO } from "./dto/UpdateCategoryDTO";
 
 @Controller('/api/v1/categories')
 export class CategoryController{
 
-	constructor(
-
-		private readonly categoryService: CategoryService
-		
-	){}
+	constructor(private readonly categoryService: CategoryService){}
 
 	@Post()
-	async createCategory(){}
+	async createCategory(@Body() dateCategories: CreateCategoryDTO){
+
+		const createCategory = await this.categoryService.createCategory(dateCategories);
+
+		return {
+
+			category: new ListCategoryDTO(
+				
+				createCategory.id, 
+				createCategory.name, 
+				createCategory.description
+			),
+
+			message: 'Category created successfully'
+		}
+	}
 
 	@Get()
-	async listCategories(){}
+	async listCategories(){
+
+		return await this.categoryService.listCategories();
+	}
 
 	@Get('/:id')
-	async getCategory(@Param('id') id: string){}
+	async getCategory(@Param('id') id: string){
+
+		return await this.categoryService.getCategory(id);
+	}
 
 	@Put('/:id')
-	async updateCategory(@Param('id') id: string){}
+	async updateCategory(@Param('id') id: string, @Body() dateUpdate: UpdateCategoryDTO){
+
+		const updateCategory = await this.categoryService.updateCategory(id, dateUpdate);
+
+		return {
+
+			updateCategory: updateCategory,
+			message: 'Category updated successfully'
+		}
+	}
 
 	@Delete('/:id')
-	async deleteCategory(@Param('id') id: string){}
+	async deleteCategory(@Param('id') id: string){
+
+		const deleteCategory = await this.categoryService.deleteCategory(id);
+
+		return {
+
+			deleteCategory: deleteCategory,
+			message: 'Category deleted successfully'
+		}
+	}
 }
