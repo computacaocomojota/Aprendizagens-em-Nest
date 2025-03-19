@@ -1,8 +1,11 @@
 import { 
 	
 	Column, 
+	CreateDateColumn, 
+	DeleteDateColumn, 
 	Entity, 
 	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 
 } from "typeorm";
 
@@ -17,4 +20,13 @@ export class TempleteEntity{
 
 	@Column({name: 'content', type: 'text', nullable: false})
 	content: string;
+
+	@CreateDateColumn({name: 'created_at'})
+	createdAt: string
+
+	@UpdateDateColumn({name: 'updated_at'})
+	updatedAt: string
+
+	@DeleteDateColumn({name: 'deleted_at'})
+	deletedAt: string
 }

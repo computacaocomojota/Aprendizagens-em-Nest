@@ -18,7 +18,7 @@ export class GeminiService{
 		try{
 
 			const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-			const result = await model.generateContent(prompt['']);
+			const result = await model.generateContent(prompt['prompt']);
 
 			return result.response.text();		
 
