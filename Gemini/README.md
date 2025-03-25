@@ -1,5 +1,7 @@
 # API de Gerenciamento de Templates de Prompts com Integração com Google Gemini
 
+### Status: em desenvolvimento
+
 ## Descrição
 
 Este projeto consiste em uma API desenvolvida em **Nest.js** para o gerenciamento de templates de prompts com integração com a **API do Google Gemini**. A API permite que os usuários criem, gerenciem e consultem templates de prompts para otimizar a interação com modelos de Inteligência Artificial.
