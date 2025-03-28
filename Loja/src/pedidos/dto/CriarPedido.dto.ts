@@ -1,12 +1,12 @@
-import { UsuarioEntity } from "../../usuarios/usuario.entity";
-import { StatusPedido } from "../enum/statuspedido.enum";
 import {
 
-	IsEnum,
 	IsNotEmpty, 
 	IsNumber, 
 	IsUUID 
+	
 } from "class-validator";
+
+import { UsuarioEntity } from "../../usuarios/usuario.entity";
 
 export class CriarPedidoDTO{	
 	
@@ -17,9 +17,5 @@ export class CriarPedidoDTO{
 	@IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
 	@IsNotEmpty()
 	valorTotal: number;
-
-	@IsEnum(StatusPedido,{message: 'Estado inválido'})
-	@IsNotEmpty()
-	status: StatusPedido;
 
 }

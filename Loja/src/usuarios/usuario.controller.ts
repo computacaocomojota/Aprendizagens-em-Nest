@@ -7,11 +7,11 @@ import {
 	Post, 
 	Put 
 } from "@nestjs/common";
+
 import { CriarUsuarioDTO } from "./dto/CriarUsuario.dto";
 import { ListarUsuarioDTO } from "./dto/ListarUsuario.dto";
 import { AtualizarUsuarioDTO } from "./dto/AtualizarUsuario.dto";
 import { UsuarioService } from "./usuario.service";
-
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -25,7 +25,7 @@ export class UsuarioController {
 
 		return {
 
-			usuario: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome),
+			usuario: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome, usuarioSalvo.pedidos),
 			messagem: 'Usuário criado com sucesso'
 		};
 	}
@@ -33,7 +33,7 @@ export class UsuarioController {
 	@Get()
 	async listaUsuarios() {
 
-		return this.usuarioService.listarUsuarios();
+		return await this.usuarioService.listarUsuarios();
 
 	}
 

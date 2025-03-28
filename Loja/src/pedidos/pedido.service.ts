@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioEntity } from '../usuarios/usuario.entity';
@@ -21,41 +21,57 @@ export class PedidosService {
 
   ){}
 
-  async criarPedido(usuarioId: string){
+  async criarPedido(dadosDoPedido: CriarPedidoDTO){
 
-    const usuario = await this.usuarioRepository.findOneBy({id: usuarioId})
+    const usuario = await this.usuarioRepository.findOneBy({id: dadosDoPedido.usuario.id})
+
+    if(!usuario){
+      
+      throw new NotFoundException('Usuario não encontrado')
+    }
+    
     const pedidoEntity = new PedidoEntity()
 
-    pedidoEntity.valorTotal = 0
+    pedidoEntity.valorTotal = dadosDoPedido.valorTotal
     pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
     pedidoEntity.usuario = usuario
 
-    const pedidoSalvo = await this.pedidoRepository.save(pedidoEntity)
-
-    return pedidoSalvo
+    return await this.pedidoRepository.save(pedidoEntity)
 
   }
 
   async listarPedido(){
 
-    const pedidosSalvos = await this.pedidoRepository.find();
+    const pedidosSalvos = await this.pedidoRepository.find({ relations: ['usuario'] });
 
     const pedidosLista = pedidosSalvos.map(
      
-      (pedido) => console.log(pedido)
+      (pedido) => new ListarPedidoDTO(pedido.id, pedido.usuario.id, pedido.valorTotal, pedido.status)
     )
-
-    
 
     return pedidosLista;
   }
 
   async atualizarPedido(id:string, dadosDeAtualizacao: AtualizarPedidoDTO){
 
+    const pedido = await this.pedidoRepository.findOneBy({id})
+    
+    if(!pedido){
+      
+      throw new NotFoundException('Pedido não encontrado')
+    }
+
     await this.pedidoRepository.update(id,dadosDeAtualizacao)
   }
 
   async deletarPedido(id:string){
+
+    const pedido = await this.pedidoRepository.findOneBy({id})
+
+    if(!pedido){
+
+      throw new NotFoundException('Pedido não encontrado')
+    }
 
     await this.pedidoRepository.delete(id)
   }

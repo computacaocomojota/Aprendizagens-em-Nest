@@ -19,13 +19,13 @@ export class PedidoController {
   constructor(private readonly pedidoService: PedidosService) { }
 
   @Post()
-  async criarPedido(@Body() dadosDoPedido) {
+  async criarPedido(@Body() dadosDoPedido: CriarPedidoDTO){
     
-    const pedidoSalvo = await this.pedidoService.criarPedido(dadosDoPedido.usuarioId)
+    const pedidoSalvo = await this.pedidoService.criarPedido(dadosDoPedido)
 
     return {
 
-      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.usuario.id,pedidoSalvo.valorTotal,pedidoSalvo.status),
+      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.id, pedidoSalvo.usuario.id, pedidoSalvo.valorTotal,pedidoSalvo.status),
       message: 'Pedido criado com sucesso',
     }
   }
@@ -33,11 +33,12 @@ export class PedidoController {
   @Get()
   async listarPedidos(){
 
-    return this.pedidoService.listarPedido()
+    return await this.pedidoService.listarPedido()
   }
 
+
   @Put('/:id')
-  async atualizarPedido(@Param('id') id:string, @Body() dadosDeAtualizacao){
+  async atualizarPedido(@Param('id') id:string, @Body() dadosDeAtualizacao: AtualizarPedidoDTO){
 
     const pedidoAualizado = await this.pedidoService.atualizarPedido(id,dadosDeAtualizacao)
 
