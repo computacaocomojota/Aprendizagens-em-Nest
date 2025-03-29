@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CategoryEntity } from "./category.entity";
@@ -33,9 +33,8 @@ export class CategoryService {
 
 		const listCategories = saveCategories.map(
 			
-			category => new ListCategoryDTO(category.id, category.name, category.description)
+			category => new ListCategoryDTO(category.id, category.name, category.description, category.templetes)
 		)
-
 
 		return listCategories;
 	}
@@ -46,21 +45,35 @@ export class CategoryService {
 
 		if(!saveCategory){
 
-			throw new Error(`Category with ${id} not found`);
+			throw new NotFoundException(`Category with ${id} not found`);
 		}
 
-		const getCategory = new ListCategoryDTO(saveCategory.id, saveCategory.name, saveCategory.description);
+		const getCategory = new ListCategoryDTO(saveCategory.id, saveCategory.name, saveCategory.description, saveCategory.templetes);
 
 		return getCategory;
 	}
 
 	async updateCategory(id:string, dateUpdate: UpdateCategoryDTO){
 
+		const saveCategory = await this.categoryRepository.findOne({ where: { id } });
+
+		if(!saveCategory){
+
+			throw new NotFoundException(`Category with ${id} not found`);
+		}
+
 		await this.categoryRepository.update(id, dateUpdate);
 	}
 
 	async deleteCategory(id:string){
 
+		const saveCategory = await this.categoryRepository.findOne({ where: { id } });
+
+		if(!saveCategory){
+
+			throw new NotFoundException(`Category with ${id} not found`);
+		}
+		
 		await this.categoryRepository.delete(id);
 	}
 }

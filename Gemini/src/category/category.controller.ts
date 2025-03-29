@@ -31,7 +31,8 @@ export class CategoryController{
 				
 				createCategory.id, 
 				createCategory.name, 
-				createCategory.description
+				createCategory.description,
+				createCategory.templetes
 			),
 
 			message: 'Category created successfully'

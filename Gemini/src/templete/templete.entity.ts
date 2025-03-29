@@ -1,9 +1,12 @@
+import { CategoryEntity } from "src/category/category.entity";
 import { 
 	
 	Column, 
 	CreateDateColumn, 
 	DeleteDateColumn, 
 	Entity, 
+	JoinTable, 
+	ManyToMany, 
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 
@@ -29,4 +32,8 @@ export class TempleteEntity{
 
 	@DeleteDateColumn({name: 'deleted_at'})
 	deletedAt: string
+
+	@ManyToMany(() => CategoryEntity, categoryEntity => categoryEntity.templetes, { cascade: true, eager: true })
+	@JoinTable({name: 'templete_categories'})
+	categories: CategoryEntity[]
 }

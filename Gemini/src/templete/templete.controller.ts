@@ -14,8 +14,6 @@ import { TempleteService } from "./templete.service";
 import { ListTempleteDTO } from "./dto/ListTempleteDTO";
 import { CreateTempleteDTO } from "./dto/CreateTempleteDTO";
 import { UpdateTempleteDTO } from "./dto/UpdateTempleteDTO";
-
-
 @Controller('/api/v1/templetes')
 export class TempleteController{
 
@@ -32,17 +30,30 @@ export class TempleteController{
 
 				createTemplete.id, 
 				createTemplete.title, 
-				createTemplete.content
+				createTemplete.content,
+				createTemplete.categories
 			),
 
 			message: 'Templete created successfully'
 		}
 	}
 
+	@Post('/:templeteId/categories/:categoryId')
+	async addCategoryToTemplete(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
+
+		const addCategoryToTemplete = await this.templeteService.addCategoryToTemplete(templeteId, categoryId);
+
+		return{
+
+			addCategoryToTemplete: addCategoryToTemplete,
+			message: 'Category added to templete successfully'
+		}
+	}
+
 	@Get()
 	async listTempletes(){
 
-		return this.templeteService.listTempletes();
+		return await this.templeteService.listTempletes();
 	}
 
 	@Get('/:id')
@@ -72,6 +83,18 @@ export class TempleteController{
 
 			deleteTemplete: deleteTemplete,
 			message: 'Templete deleted successfully'
+		}
+	}
+
+	@Delete('/:templeteId/categories/:categoryId')
+	async removeCategoryToTemplete(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
+
+		const removeCategoryToTemplete = await this.templeteService.removeCategoryToTemplete(templeteId, categoryId);
+
+		return{
+
+			removeCategoryToTemplete: removeCategoryToTemplete,
+			message: 'Category removed to templete successfully'
 		}
 	}
 }

@@ -1,3 +1,5 @@
+import { TempleteEntity } from "src/templete/templete.entity";
+
 export class ListCategoryDTO{
 	
 	constructor(
@@ -5,6 +7,7 @@ export class ListCategoryDTO{
 		readonly id: string,
 		readonly name: string,
 		readonly description: string,
+		readonly templetes: TempleteEntity[]
 
 	){}
 }

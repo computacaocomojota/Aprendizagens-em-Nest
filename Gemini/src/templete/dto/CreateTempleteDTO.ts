@@ -1,9 +1,12 @@
 import { 
 	
 	IsNotEmpty, 
+	IsOptional, 
 	MaxLength 
 
 } from "class-validator";
+
+import { CategoryEntity } from "src/category/category.entity";
 
 export class CreateTempleteDTO{
 
@@ -13,4 +16,7 @@ export class CreateTempleteDTO{
 
 	@IsNotEmpty({message: 'Content is required'})
 	content: string;
+
+	@IsOptional()
+	categories: CategoryEntity[]
 }

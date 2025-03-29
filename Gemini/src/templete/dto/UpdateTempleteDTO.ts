@@ -17,4 +17,6 @@ export class UpdateTempleteDTO{
 	@IsNotEmpty({message: 'Content is required'})
 	@IsString()
 	content: string;
+
+	category: string;
 }

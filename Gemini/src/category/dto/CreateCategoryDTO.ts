@@ -1,11 +1,13 @@
 import { 
 	
 	IsNotEmpty, 
+	IsOptional, 
 	IsString, 
-	Max,
 	MaxLength
 
 } from "class-validator";
+
+import { TempleteEntity } from "src/templete/templete.entity";
 
 export class CreateCategoryDTO{
 
@@ -17,4 +19,8 @@ export class CreateCategoryDTO{
 	@IsNotEmpty({ message: 'Description is required' })
 	@IsString()
 	description: string;
+
+	@IsOptional()
+	templetes: TempleteEntity[];
+
 }
