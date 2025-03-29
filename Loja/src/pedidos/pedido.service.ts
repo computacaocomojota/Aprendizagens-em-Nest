@@ -21,9 +21,9 @@ export class PedidosService {
 
   ){}
 
-  async criarPedido(dadosDoPedido: CriarPedidoDTO){
+  async criarPedido(usuarioId: string, dadosDoPedido: CriarPedidoDTO){
 
-    const usuario = await this.usuarioRepository.findOneBy({id: dadosDoPedido.usuario.id})
+    const usuario = await this.usuarioRepository.findOneBy({id: usuarioId})
 
     if(!usuario){
       
@@ -40,39 +40,54 @@ export class PedidosService {
 
   }
 
-  async listarPedido(){
+  async listarPedido(usuarioId: string){
 
-    const pedidosSalvos = await this.pedidoRepository.find({ relations: ['usuario'] });
+    const pedidosSalvos = await this.pedidoRepository.find({
+      
+      where: {usuario: {id: usuarioId}},
+      relations: {usuario: true}
+      
+    });
 
     const pedidosLista = pedidosSalvos.map(
      
-      (pedido) => new ListarPedidoDTO(pedido.id, pedido.usuario.id, pedido.valorTotal, pedido.status)
+      (pedido) => new ListarPedidoDTO(pedido.id, pedido.valorTotal, pedido.status)
     )
 
     return pedidosLista;
   }
 
-  async atualizarPedido(id:string, dadosDeAtualizacao: AtualizarPedidoDTO){
+  async atualizarPedido(usuarioId:string, pedidoId: string, dadosDeAtualizacao: AtualizarPedidoDTO){
 
-    const pedido = await this.pedidoRepository.findOneBy({id})
+    const pedido = await this.pedidoRepository.findOne({
+
+      where: {id: pedidoId, usuario: {id: usuarioId}},
+      relations: {usuario: true}
+
+    })
     
     if(!pedido){
       
       throw new NotFoundException('Pedido não encontrado')
     }
 
-    await this.pedidoRepository.update(id,dadosDeAtualizacao)
+    await this.pedidoRepository.update(pedidoId,dadosDeAtualizacao)
   }
 
-  async deletarPedido(id:string){
+  async deletarPedido(usuarioId: string, pedidoId: string){
 
-    const pedido = await this.pedidoRepository.findOneBy({id})
+    const pedido = await this.pedidoRepository.findOne({
+
+      where: {id: pedidoId, usuario: {id: usuarioId}},
+      relations: {usuario: true}
+
+    })
 
     if(!pedido){
 
       throw new NotFoundException('Pedido não encontrado')
     }
 
-    await this.pedidoRepository.delete(id)
+    await this.pedidoRepository.delete(pedidoId)
   }
 }

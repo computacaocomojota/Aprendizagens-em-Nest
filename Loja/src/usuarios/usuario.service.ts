@@ -30,11 +30,11 @@ export class UsuarioService{
 
 	async listarUsuarios(){
 
-		const usuariosSalvos = await this.usuarioRepository.find({relations: ['pedidos']});
+		const usuariosSalvos = await this.usuarioRepository.find();
 
 		const usuariosLista = usuariosSalvos.map(
 			
-			(usuario) => new ListarUsuarioDTO(usuario.id, usuario.nome, usuario.pedidos)
+			(usuario) => new ListarUsuarioDTO(usuario.id, usuario.nome)
 		);
 
 		return usuariosLista;
@@ -43,7 +43,7 @@ export class UsuarioService{
 
 	async atualizarUsuario(id: string, dadosDeAtualizacao: AtualizarUsuarioDTO){
 
-		const usuario = await this.usuarioRepository.findOneBy({id});
+		const usuario = await this.usuarioRepository.findOneBy({id: id});
 
 		if(!usuario){
 
@@ -55,7 +55,7 @@ export class UsuarioService{
 
 	async deletarUsuario(id: string){
 
-		const usuario = await this.usuarioRepository.findOneBy({id});
+		const usuario = await this.usuarioRepository.findOneBy({id: id});
 
 		if(!usuario){
 

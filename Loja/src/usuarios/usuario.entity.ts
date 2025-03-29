@@ -33,6 +33,6 @@ export class UsuarioEntity {
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deleted_at: string;
 
-	@OneToMany(() => PedidoEntity, (pedidoEntity) => pedidoEntity.usuario, {cascade: true, eager: true})
+	@OneToMany(() => PedidoEntity, (pedidoEntity) => pedidoEntity.usuario, {cascade: true})
 	pedidos: PedidoEntity[];
 }

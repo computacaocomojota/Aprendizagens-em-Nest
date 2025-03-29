@@ -32,8 +32,7 @@ export class PedidoEntity {
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deletedAt: string;
 
-	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.pedidos,{
-		orphanedRowAction: 'delete',onDelete: 'CASCADE', onUpdate: 'CASCADE' 
-	})
+	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.pedidos,
+	{orphanedRowAction: 'delete',onDelete: 'CASCADE', onUpdate: 'CASCADE'})
 	usuario: UsuarioEntity;
 }

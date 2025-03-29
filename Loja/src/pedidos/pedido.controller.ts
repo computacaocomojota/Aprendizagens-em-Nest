@@ -13,34 +13,34 @@ import { CriarPedidoDTO } from './dto/CriarPedido.dto';
 import { ListarPedidoDTO } from './dto/ListarPedido.dto';
 import { AtualizarPedidoDTO } from './dto/AtualizarPedido.dto';
 
-@Controller('/pedidos')
+@Controller('/usuarios/:usuarioId/pedidos')
 export class PedidoController {
 
   constructor(private readonly pedidoService: PedidosService) { }
 
   @Post()
-  async criarPedido(@Body() dadosDoPedido: CriarPedidoDTO){
+  async criarPedido(@Param('usuarioId') usuarioId: string, @Body() dadosDoPedido: CriarPedidoDTO){
     
-    const pedidoSalvo = await this.pedidoService.criarPedido(dadosDoPedido)
+    const pedidoSalvo = await this.pedidoService.criarPedido(usuarioId, dadosDoPedido)
 
     return {
 
-      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.id, pedidoSalvo.usuario.id, pedidoSalvo.valorTotal,pedidoSalvo.status),
+      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.id, pedidoSalvo.valorTotal,pedidoSalvo.status),
       message: 'Pedido criado com sucesso',
     }
   }
 
   @Get()
-  async listarPedidos(){
+  async listarPedidos(@Param('usuarioId') usuarioId: string){
 
-    return await this.pedidoService.listarPedido()
+    return await this.pedidoService.listarPedido(usuarioId)
   }
 
 
-  @Put('/:id')
-  async atualizarPedido(@Param('id') id:string, @Body() dadosDeAtualizacao: AtualizarPedidoDTO){
+  @Put('/:pedidoId')
+  async atualizarPedido(@Param('usuarioId') usuarioId: string, @Param('pedidoId') pedidoId: string, @Body() dadosDeAtualizacao: AtualizarPedidoDTO){
 
-    const pedidoAualizado = await this.pedidoService.atualizarPedido(id,dadosDeAtualizacao)
+    const pedidoAualizado = await this.pedidoService.atualizarPedido(usuarioId, pedidoId, dadosDeAtualizacao)
 
     return {
 
@@ -49,10 +49,10 @@ export class PedidoController {
     }
   }
 
-  @Delete('/:id')
-  async deletarPedido(@Param('id') id:string){
+  @Delete('/:pedidoId')
+  async deletarPedido(@Param('usuarioId') usuarioId: string, @Param('pedidoId') pedidoId: string){
 
-    const pedidoDeletado = await this.pedidoService.deletarPedido(id)
+    const pedidoDeletado = await this.pedidoService.deletarPedido(usuarioId, pedidoId)
     
     return {
 

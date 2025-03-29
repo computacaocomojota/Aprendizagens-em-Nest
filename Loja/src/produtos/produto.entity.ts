@@ -42,16 +42,12 @@ export class ProdutoEntity{
 	@DeleteDateColumn({name: 'deleted_at'})
 	deleted_at: string;
 
-	@OneToMany(() => ProdutoCaracteristicaEntity,(produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto, { 
-
-		cascade: true, eager: true 
-	})
+	@OneToMany(() => ProdutoCaracteristicaEntity,(produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto, 
+	{cascade: true, eager: true})
 	caracteristicas: ProdutoCaracteristicaEntity[];
 
-	@OneToMany(() => ProdutoImagemEntity,(produtoImagemEntity) => produtoImagemEntity.produto,{ 
-		
-		cascade: true, eager: true 
-	})
+	@OneToMany(() => ProdutoImagemEntity,(produtoImagemEntity) => produtoImagemEntity.produto,
+	{cascade: true, eager: true})
 	imagens: ProdutoImagemEntity[];
 
 }

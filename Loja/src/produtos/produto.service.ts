@@ -43,21 +43,21 @@ export class ProdutoService{
 		return produtosLista;
 	}
 
-	async atualizarProduto(id: string, produto: AtualizarProdutoDTO){
+	async atualizarProduto(id: string, dadosDeAtualizacao: AtualizarProdutoDTO){
 
-		const pedido = await this.produtoRepository.findOneBy({id});
+		const pedido = await this.produtoRepository.findOneBy({id: id});
 
 		if(!pedido){
 			
 			throw new NotFoundException('Produto não encontrado');
 		}
 		
-		await this.produtoRepository.update(id, produto);
+		await this.produtoRepository.update(id, dadosDeAtualizacao);
 	}
 
 	async deletarProduto(id: string){
 
-		const pedido = await this.produtoRepository.findOneBy({id});
+		const pedido = await this.produtoRepository.findOneBy({id: id});
 
 		if(!pedido){
 

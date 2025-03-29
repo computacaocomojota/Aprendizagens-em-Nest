@@ -1,4 +1,5 @@
 import { 
+	
 	Body, 
 	Controller, 
 	Delete, 
@@ -6,6 +7,7 @@ import {
 	Param, 
 	Post, 
 	Put 
+
 } from "@nestjs/common";
 
 import { ProdutoService } from "./produto.service";
@@ -33,7 +35,7 @@ export class ProdutoController {
 	@Get()
 	async listarProdutos() {
 
-		return this.produtoService.listarProdutos();
+		return await this.produtoService.listarProdutos();
 
 	}
 

@@ -6,8 +6,6 @@ export class ListarUsuarioDTO {
 		
 		readonly id: string, 
 		readonly nome: string,
-		readonly pedidos: PedidoEntity[]
-		
 	){}
 	
 }

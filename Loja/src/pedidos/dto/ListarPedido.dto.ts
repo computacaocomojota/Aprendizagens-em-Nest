@@ -5,9 +5,8 @@ export class ListarPedidoDTO{
 	constructor(
 
 		readonly id: string,
-		readonly usuarioId: string,
 		readonly valorTotal: number,
-		readonly status: StatusPedido
-		
+		readonly status: StatusPedido,
+
 	){}
 }

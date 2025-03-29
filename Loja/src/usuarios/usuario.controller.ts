@@ -25,7 +25,7 @@ export class UsuarioController {
 
 		return {
 
-			usuario: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome, usuarioSalvo.pedidos),
+			usuario: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome),
 			messagem: 'Usuário criado com sucesso'
 		};
 	}
