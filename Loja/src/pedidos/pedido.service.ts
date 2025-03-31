@@ -7,6 +7,7 @@ import { CriarPedidoDTO } from './dto/CriarPedido.dto';
 import { ListarPedidoDTO } from './dto/ListarPedido.dto';
 import { AtualizarPedidoDTO } from './dto/AtualizarPedido.dto';
 import { StatusPedido } from './enum/statuspedido.enum';
+import { ItemPedidoEntity } from './itempedido.entity';
 
 @Injectable()
 export class PedidosService {
@@ -32,9 +33,28 @@ export class PedidosService {
     
     const pedidoEntity = new PedidoEntity()
 
-    pedidoEntity.valorTotal = dadosDoPedido.valorTotal
     pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
     pedidoEntity.usuario = usuario
+
+    const itensPedidoEntidade = dadosDoPedido.itensPedido.map((itemPedido) => {
+
+      const itemPedidoEntity = new ItemPedidoEntity()
+
+      itemPedidoEntity.precoVenda = 10
+      itemPedidoEntity.quantidade = itemPedido.quantidade
+
+      return itemPedidoEntity;
+      
+    })
+
+    const valorTotal = itensPedidoEntidade.reduce((valorTotal, itemPedido) => {
+
+      return valorTotal + (itemPedido.precoVenda * itemPedido.quantidade)
+    
+    },0);
+
+    pedidoEntity.valorTotal = valorTotal
+    pedidoEntity.itensPedido = itensPedidoEntidade
 
     return await this.pedidoRepository.save(pedidoEntity)
 

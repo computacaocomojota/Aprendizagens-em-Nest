@@ -1,21 +1,24 @@
 import {
 
-	IsNotEmpty, 
-	IsNumber, 
-	IsUUID 
+	ArrayMinSize,
+	IsArray,
+	IsInt,
+	ValidateNested
 	
 } from "class-validator";
 
-import { UsuarioEntity } from "../../usuarios/usuario.entity";
+import { Type } from "class-transformer";
 
+class ItemPedidoDTO{
+
+	@IsInt()
+	quantidade: number;
+}
 export class CriarPedidoDTO{	
 	
-	@IsUUID(undefined,{ message: 'ID de usuário inválido' })
-	@IsNotEmpty()
-	usuario: UsuarioEntity;
-	
-	@IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
-	@IsNotEmpty()
-	valorTotal: number;
-
+	@ValidateNested()
+	@IsArray()
+	@ArrayMinSize(1)
+	@Type(()=> ItemPedidoDTO)
+	itensPedido: ItemPedidoDTO[];
 }

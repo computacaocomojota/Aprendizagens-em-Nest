@@ -1,15 +1,17 @@
-
-import { UsuarioEntity } from "../usuarios/usuario.entity";
-import { StatusPedido } from "./enum/statuspedido.enum";
 import { 
 	Column, 
 	CreateDateColumn, 
 	DeleteDateColumn, 
 	Entity, 
 	ManyToOne, 
+	OneToMany, 
 	PrimaryGeneratedColumn, 
 	UpdateDateColumn 
 } from "typeorm";
+
+import { UsuarioEntity } from "../usuarios/usuario.entity";
+import { StatusPedido } from "./enum/statuspedido.enum";
+import { ItemPedidoEntity } from "./itempedido.entity";
 
 @Entity({ name: 'pedidos' })
 export class PedidoEntity {
@@ -31,6 +33,10 @@ export class PedidoEntity {
 
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deletedAt: string;
+
+	@OneToMany(() => ItemPedidoEntity,(itemPedidoEntity) => itemPedidoEntity.pedido,
+	{cascade: true, eager: true})
+	itensPedido: ItemPedidoEntity[];
 
 	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.pedidos,
 	{orphanedRowAction: 'delete',onDelete: 'CASCADE', onUpdate: 'CASCADE'})
