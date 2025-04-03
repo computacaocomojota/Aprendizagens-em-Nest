@@ -8,7 +8,7 @@ import {
 
 import { GeminiService } from "./gemini.service";
 
-@Controller('/api/v1/chat')
+@Controller('chat')
 export class GeminiController {
 
 	constructor(private readonly geminiService: GeminiService) { }

@@ -32,6 +32,7 @@ export class CategoryEntity{
 	@DeleteDateColumn({name: 'deleted_at'})
 	deletedAt: string
 
-	@ManyToMany(() => TempleteEntity, templeteEntity => templeteEntity.categories,{ cascade: true, eager: true })
+	@ManyToMany(() => TempleteEntity, templeteEntity => templeteEntity.categories, 
+	{orphanedRowAction: 'delete', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
 	templetes: TempleteEntity[]
 }

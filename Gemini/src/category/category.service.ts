@@ -5,7 +5,7 @@ import { CategoryEntity } from "./category.entity";
 import { CreateCategoryDTO } from "./dto/CreateCategoryDTO";
 import { ListCategoryDTO } from "./dto/ListCategoryDTO";
 import { UpdateCategoryDTO } from "./dto/UpdateCategoryDTO";
-import { ConnectableObservable } from "rxjs";
+import { ListTempletesByCategoriesDTO } from "./dto/ListTempletesByCategoriesDTO";
 
 @Injectable()
 export class CategoryService {
@@ -27,35 +27,61 @@ export class CategoryService {
 		return await this.categoryRepository.save(categoryEntity);
 	}
 
-	async listCategories(){
+	async getAllCategories(){
 
 		const saveCategories = await this.categoryRepository.find();
 
 		const listCategories = saveCategories.map(
 			
-			category => new ListCategoryDTO(category.id, category.name, category.description, category.templetes)
+			category => new ListCategoryDTO(category.id, category.name, category.description)
 		)
 
 		return listCategories;
 	}
 
-	async getCategory(id:string){
+	async getCategoryById(id: string){
 
-		const saveCategory = await this.categoryRepository.findOne({ where: { id } });
+		const saveCategory = await this.categoryRepository.findOneBy({id: id});
 
 		if(!saveCategory){
 
 			throw new NotFoundException(`Category with ${id} not found`);
 		}
 
-		const getCategory = new ListCategoryDTO(saveCategory.id, saveCategory.name, saveCategory.description, saveCategory.templetes);
+		const getCategory = new ListCategoryDTO(saveCategory.id, saveCategory.name, saveCategory.description);
 
 		return getCategory;
 	}
 
-	async updateCategory(id:string, dateUpdate: UpdateCategoryDTO){
+	async getTempleteByCategory(categoryId: string){
 
-		const saveCategory = await this.categoryRepository.findOne({ where: { id } });
+		const category = await this.categoryRepository.findOne({
+
+			where: {id: categoryId},
+			relations: ['templetes']
+		})
+
+		if (!category) throw new NotFoundException(`Category with id ${categoryId} not found`);
+		
+		const templetesByCategories = category.templetes.map(
+
+			templete => new ListTempletesByCategoriesDTO(
+
+				templete.id,
+				templete.title,
+				templete.content,
+				[
+					new ListCategoryDTO(category.id, category.name, category.description)
+				]
+			)
+		);
+
+		return templetesByCategories;
+	}
+
+	async updateCategory(id: string, dateUpdate: UpdateCategoryDTO){
+
+		const saveCategory = await this.categoryRepository.findOneBy({id: id});
 
 		if(!saveCategory){
 
@@ -67,7 +93,7 @@ export class CategoryService {
 
 	async deleteCategory(id:string){
 
-		const saveCategory = await this.categoryRepository.findOne({ where: { id } });
+		const saveCategory = await this.categoryRepository.findOneBy({id: id});
 
 		if(!saveCategory){
 

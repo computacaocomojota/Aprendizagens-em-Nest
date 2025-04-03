@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { CreateTempleteDTO } from "./dto/CreateTempleteDTO";
 import { ListTempleteDTO } from "./dto/ListTempleteDTO";
 import { UpdateTempleteDTO } from "./dto/UpdateTempleteDTO";
+import { ListCategoriesByTempletesDTO } from "./dto/ListCategoriesByTempletesDTO";
 
 @Injectable()
 export class TempleteService{
@@ -30,15 +31,90 @@ export class TempleteService{
 		return await this.templeteRepository.save(templeteEntity);
 	}
 
-	async addCategoryToTemplete(templeteId: string, categoryId: string){
+	async getAllTempletes(){
+		
+		const saveTempletes = await this.templeteRepository.find();
 
-		const templete = await this.templeteRepository.findOne({where: { id: templeteId }, relations: ['categories']});
-		const category = await this.categoryRepository.findOne({where: { id: categoryId }});
+		const listTempletes = saveTempletes.map(
+			
+			templete => new ListTempleteDTO(templete.id, templete.title, templete.content)
+		);
 
-		if(!templete || !category){
+		return listTempletes;
+	}
 
-			throw new NotFoundException('Templete or category not found');
+	async getTempleteById(id: string){
+
+		const saveTemplete = await this.templeteRepository.findOneBy({id: id});
+
+		if(!saveTemplete){
+
+			throw new NotFoundException(`Templete with ${id} not found`);
 		}
+		
+		const getTemplete = new ListTempleteDTO(saveTemplete.id, saveTemplete.title, saveTemplete.content);
+		
+		return getTemplete;
+	}
+	
+	async getCategoriesByTemplete(templeteId: string){
+		
+		const templete = await this.templeteRepository.findOne({
+
+			where: {id: templeteId},
+			relations: ['categories']
+		})
+
+		if(!templete) throw new NotFoundException(`Templete with ${templeteId} not found`);
+		
+		const categoriesByTempletes = templete.categories.map(
+			
+			category => new ListCategoriesByTempletesDTO(
+				
+				category.id, 
+				category.name, 
+				category.description, 
+				[
+					new ListTempleteDTO(templete.id,templete.title,templete.content)
+				]
+			)
+		);
+		
+		return categoriesByTempletes;
+		
+	}
+	
+	async updateTemplete(id: string, dateUpdate: UpdateTempleteDTO){
+		
+		const templete = await this.templeteRepository.findOneBy({id: id});
+		
+		if(!templete){
+			
+			throw new NotFoundException(`Templete with ${id} not found`);
+		}
+		
+		await this.templeteRepository.update(id, dateUpdate);
+	}
+	
+	async deleteTemplete(id: string){
+		
+		const templete = await this.templeteRepository.findOneBy({id: id});
+		
+		if(!templete){
+			
+			throw new NotFoundException(`Templete with ${id} not found`);
+		}
+		
+		await this.templeteRepository.delete(id);
+	}
+	
+	async attachCategory(templeteId: string, categoryId: string){
+
+		const templete = await this.templeteRepository.findOneBy({id: templeteId});
+		const category = await this.categoryRepository.findOneBy({id: categoryId });
+
+		if(!templete) throw new NotFoundException(`Template with id ${templeteId} not found`)
+		if(!category) throw new NotFoundException(`Template with id ${categoryId} not found`)
 
 		if(!templete.categories){
 
@@ -48,70 +124,24 @@ export class TempleteService{
 		templete.categories.push(category);
 
 		return await this.templeteRepository.save(templete);
-
 	}
 
-	async listTempletes(){
+	async detachCategory(templeteId: string, categoryId: string){
 
-		const saveTempletes = await this.templeteRepository.find();
-
-		const listTempletes = saveTempletes.map(
+		const templete = await this.templeteRepository.findOne({
 			
-			templete => new ListTempleteDTO(templete.id, templete.title, templete.content, templete.categories)
-		);
+			where: {id: templeteId},
+			relations: ['categories']
+		});
 
-		return listTempletes;
-	}
-
-	async getTemplete(id:string){
-
-		const saveTemplete = await this.templeteRepository.findOne({where: { id }});
-
-		if(!saveTemplete){
-
-			throw new NotFoundException(`Templete with ${id} not found`);
-		}
-
-		const getTemplete = new ListTempleteDTO(saveTemplete.id, saveTemplete.title, saveTemplete.content, saveTemplete.categories);
-
-		return getTemplete;
-	}
-
-	async updateTemplete(id: string, dateUpdate: UpdateTempleteDTO){
-
-		const templete = await this.templeteRepository.findOne({where: { id }});
+		if(!templete) throw new NotFoundException(`Template with id ${templeteId} not found`)
 		
-		if(!templete){
+		const category = await this.categoryRepository.findOneBy({id: categoryId});
 
-			throw new NotFoundException(`Templete with ${id} not found`);
-		}
-
-		await this.templeteRepository.update(id, dateUpdate);
-	}
-
-	async deleteTemplete(id: string){
-
-		const templete = await this.templeteRepository.findOne({where: { id }});
-
-		if(!templete){
-
-			throw new NotFoundException(`Templete with ${id} not found`);
-		}
-
-		await this.templeteRepository.delete(id);
-	}
-
-	async removeCategoryToTemplete(templeteId: string, categoryId: string){
-
-		const templete = await this.templeteRepository.findOne({where: { id: templeteId }, relations: ['categories']});
-		const category = await this.categoryRepository.findOne({where: { id: categoryId }});
-
-		if(!templete || !category){
-
-			throw new NotFoundException('Templete or category not found');
-		}
+		if(!category) throw new NotFoundException(`Category with id ${categoryId} not found`)
 
 		templete.categories = templete.categories.filter(category => category.id !== categoryId);
+		
 
 		return await this.templeteRepository.save(templete);
 	}

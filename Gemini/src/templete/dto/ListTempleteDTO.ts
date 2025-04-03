@@ -1,4 +1,4 @@
-import { CategoryEntity } from "src/category/category.entity";
+import { ListCategoryDTO } from "src/category/dto/ListCategoryDTO";
 
 export class ListTempleteDTO{
 
@@ -7,8 +7,7 @@ export class ListTempleteDTO{
 		readonly id: string, 
 		readonly title: string,
 		readonly content: string,
-		readonly categories: CategoryEntity[]
-		
+		readonly categories?: ListCategoryDTO[],
 	){}
 	
 }

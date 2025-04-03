@@ -15,7 +15,7 @@ import { ListCategoryDTO } from "./dto/ListCategoryDTO";
 import { CreateCategoryDTO } from "./dto/CreateCategoryDTO";
 import { UpdateCategoryDTO } from "./dto/UpdateCategoryDTO";
 
-@Controller('/api/v1/categories')
+@Controller('categories')
 export class CategoryController{
 
 	constructor(private readonly categoryService: CategoryService){}
@@ -40,15 +40,21 @@ export class CategoryController{
 	}
 
 	@Get()
-	async listCategories(){
+	async getAllCategories(){
 
-		return await this.categoryService.listCategories();
+		return await this.categoryService.getAllCategories();
 	}
 
 	@Get('/:id')
-	async getCategory(@Param('id') id: string){
+	async getCategoryById(@Param('id') id: string){
 
-		return await this.categoryService.getCategory(id);
+		return await this.categoryService.getCategoryById(id);
+	}
+
+	@Get('/:categoryId/templetes')
+	async getTempleteByCategory(@Param('categoryId') categoryId: string){
+
+		return await this.categoryService.getTempleteByCategory(categoryId)
 	}
 
 	@Put('/:id')

@@ -14,7 +14,7 @@ import { TempleteService } from "./templete.service";
 import { ListTempleteDTO } from "./dto/ListTempleteDTO";
 import { CreateTempleteDTO } from "./dto/CreateTempleteDTO";
 import { UpdateTempleteDTO } from "./dto/UpdateTempleteDTO";
-@Controller('/api/v1/templetes')
+@Controller('templetes')
 export class TempleteController{
 
 	constructor(private readonly templeteService: TempleteService){}
@@ -31,69 +31,75 @@ export class TempleteController{
 				createTemplete.id, 
 				createTemplete.title, 
 				createTemplete.content,
-				createTemplete.categories
 			),
 
 			message: 'Templete created successfully'
 		}
 	}
 
-	@Post('/:templeteId/categories/:categoryId')
-	async addCategoryToTemplete(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
-
-		const addCategoryToTemplete = await this.templeteService.addCategoryToTemplete(templeteId, categoryId);
-
-		return{
-
-			addCategoryToTemplete: addCategoryToTemplete,
-			message: 'Category added to templete successfully'
-		}
-	}
-
+	
 	@Get()
-	async listTempletes(){
-
-		return await this.templeteService.listTempletes();
+	async getAllTempletes(){
+		
+		return await this.templeteService.getAllTempletes();
 	}
-
+	
 	@Get('/:id')
-	async getTemplete(@Param('id') id: string){
-
-		return this.templeteService.getTemplete(id);
+	async getTempleteById(@Param('id') id: string){
+		
+		return await this.templeteService.getTempleteById(id);
 	}
+	
+	@Get('/:templeteId/categories')
+	async getCategoriesByTemplete(@Param('templeteId') templeteId: string){
 
+		return await this.templeteService.getCategoriesByTemplete(templeteId)
+	}
+	
 	@Put('/:id')
 	async updateTemplete(@Param('id') id: string,@Body() dateUpdate: UpdateTempleteDTO){
-
+		
 		const updateTemplete = await this.templeteService.updateTemplete(id, dateUpdate);
-
+		
 		return {
-
+			
 			updateTemplete: updateTemplete,
 			message: 'Templete updated successfully'
 		}
 	}
-
+	
 	@Delete('/:id')
 	async deleteTemplete(@Param('id') id: string){
-
+		
 		const deleteTemplete = await this.templeteService.deleteTemplete(id);
-
+		
 		return {
-
+			
 			deleteTemplete: deleteTemplete,
 			message: 'Templete deleted successfully'
 		}
 	}
+	
+	@Post('/:templeteId/categories/:categoryId')
+	async attachCategory(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
 
-	@Delete('/:templeteId/categories/:categoryId')
-	async removeCategoryToTemplete(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
-
-		const removeCategoryToTemplete = await this.templeteService.removeCategoryToTemplete(templeteId, categoryId);
+		const attachCategory = await this.templeteService.attachCategory(templeteId, categoryId);
 
 		return{
 
-			removeCategoryToTemplete: removeCategoryToTemplete,
+			attachCategory: new ListTempleteDTO(attachCategory.id, attachCategory.title, attachCategory.content, attachCategory.categories),
+			message: 'Category added to templete successfully'
+		}
+	}
+
+	@Delete('/:templeteId/categories/:categoryId')
+	async datachCategory(@Param('templeteId') templeteId: string, @Param('categoryId') categoryId: string){
+
+		const datachCategory = await this.templeteService.detachCategory(templeteId, categoryId);
+
+		return{
+
+			datachCategory: new ListTempleteDTO(datachCategory.id, datachCategory.title, datachCategory.content, datachCategory.categories),
 			message: 'Category removed to templete successfully'
 		}
 	}
