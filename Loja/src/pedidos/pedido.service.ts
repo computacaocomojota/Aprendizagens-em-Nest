@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UsuarioEntity } from '../usuarios/usuario.entity';
 import { PedidoEntity } from './pedido.entity';
 import { CriarPedidoDTO } from './dto/CriarPedido.dto';
@@ -8,6 +8,7 @@ import { ListarPedidoDTO } from './dto/ListarPedido.dto';
 import { AtualizarPedidoDTO } from './dto/AtualizarPedido.dto';
 import { StatusPedido } from './enum/statuspedido.enum';
 import { ItemPedidoEntity } from './itempedido.entity';
+import { ProdutoEntity } from 'src/produtos/produto.entity';
 
 @Injectable()
 export class PedidosService {
@@ -18,13 +19,20 @@ export class PedidosService {
     private readonly pedidoRepository: Repository<PedidoEntity>,
 
     @InjectRepository(UsuarioEntity)
-    private readonly usuarioRepository: Repository<UsuarioEntity>
+    private readonly usuarioRepository: Repository<UsuarioEntity>,
+
+    @InjectRepository(ProdutoEntity)
+    private readonly produtoRepository: Repository<ProdutoEntity>,
 
   ){}
 
   async criarPedido(usuarioId: string, dadosDoPedido: CriarPedidoDTO){
 
     const usuario = await this.usuarioRepository.findOneBy({id: usuarioId})
+
+    const produtosIds = dadosDoPedido.itensPedido.map((itemPedido) => itemPedido.produtoId)
+
+    const produtosRelacionados = await this.produtoRepository.findBy({id: In(produtosIds)})
 
     if(!usuario){
       
@@ -38,10 +46,20 @@ export class PedidosService {
 
     const itensPedidoEntidade = dadosDoPedido.itensPedido.map((itemPedido) => {
 
+      const produtoRelacionado = produtosRelacionados.find((produto) => produto.id === itemPedido.produtoId)
+
       const itemPedidoEntity = new ItemPedidoEntity()
 
-      itemPedidoEntity.precoVenda = 10
+      itemPedidoEntity.precoVenda = produtoRelacionado.valor
       itemPedidoEntity.quantidade = itemPedido.quantidade
+      itemPedidoEntity.produto = produtoRelacionado
+
+      if(!(itemPedido.quantidade <= produtoRelacionado.quantidadeDisponivel)){
+
+        throw new NotFoundException(`Quantidade deseja de ${produtoRelacionado.nome} não disponível`)
+      }
+
+      itemPedidoEntity.produto.quantidadeDisponivel -= itemPedido.quantidade
 
       return itemPedidoEntity;
       
@@ -60,54 +78,47 @@ export class PedidosService {
 
   }
 
-  async listarPedido(usuarioId: string){
+  async listarPedido(){
 
-    const pedidosSalvos = await this.pedidoRepository.find({
-      
-      where: {usuario: {id: usuarioId}},
-      relations: {usuario: true}
-      
-    });
+    const pedidosSalvos = await this.pedidoRepository.find();
+
+    console.log(pedidosSalvos)
 
     const pedidosLista = pedidosSalvos.map(
      
-      (pedido) => new ListarPedidoDTO(pedido.id, pedido.valorTotal, pedido.status)
+      (pedido) => new ListarPedidoDTO(pedido.id, pedido.valorTotal, pedido.status, pedido.itensPedido)
     )
 
     return pedidosLista;
   }
 
-  async atualizarPedido(usuarioId:string, pedidoId: string, dadosDeAtualizacao: AtualizarPedidoDTO){
+  async atualizarPedido(id: string, dadosDeAtualizacao: AtualizarPedidoDTO){
 
-    const pedido = await this.pedidoRepository.findOne({
-
-      where: {id: pedidoId, usuario: {id: usuarioId}},
-      relations: {usuario: true}
-
-    })
+    const pedido = await this.pedidoRepository.findOneBy({id: id})
     
     if(!pedido){
       
       throw new NotFoundException('Pedido não encontrado')
     }
 
-    await this.pedidoRepository.update(pedidoId,dadosDeAtualizacao)
+    await this.pedidoRepository.update(id,dadosDeAtualizacao)
+
+    const pedidoAtualizado = await this.pedidoRepository.findOneBy({id: id})
+
+    return pedidoAtualizado
   }
 
-  async deletarPedido(usuarioId: string, pedidoId: string){
+  async deletarPedido(id: string){
 
-    const pedido = await this.pedidoRepository.findOne({
-
-      where: {id: pedidoId, usuario: {id: usuarioId}},
-      relations: {usuario: true}
-
-    })
+    const pedido = await this.pedidoRepository.findOneBy({id: id})
 
     if(!pedido){
 
       throw new NotFoundException('Pedido não encontrado')
     }
 
-    await this.pedidoRepository.delete(pedidoId)
+    await this.pedidoRepository.delete(id)
+
+    return pedido
   }
 }

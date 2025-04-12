@@ -1,18 +1,19 @@
 import { Type } from 'class-transformer';
 import { 
+
 	ArrayMinSize, 
 	IsArray,
 	IsNotEmpty, 
 	IsNumber,
 	IsString,
-	IsUUID,
 	IsUrl,
 	MaxLength,
 	Min,
 	ValidateNested 
+
 } from 'class-validator';
+
 import { ProdutoEntity } from '../produto.entity';
-import { UsuarioEntity } from '../../usuarios/usuario.entity';
 
 export class CaracteristicaProdutoDTO{
 	
@@ -45,10 +46,6 @@ export class ImagemProdutoDTO{
 
 export class CriarProdutoDTO {
 	
-	@IsUUID(undefined, { message: 'ID de usuário inválido' })
-	@IsNotEmpty({ message: 'ID de usuário não pode ser vazio' })
-	usuario: UsuarioEntity;
-
 	@IsString()
 	@IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
 	nome: string

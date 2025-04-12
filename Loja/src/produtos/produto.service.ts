@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProdutoEntity } from "./produto.entity";
+import { ProdutoCaracteristicaEntity } from "./produto-caracteristica.entity";
+import { ProdutoImagemEntity } from "./produto-imagem.entity";
 import { CriarProdutoDTO } from "./dto/CriarProduto.dto";
 import { ListarProdutoDTO } from "./dto/ListarProduto.dto";
 import { AtualizarProdutoDTO } from "./dto/AtualizarProduto.dto";
@@ -25,8 +27,31 @@ export class ProdutoService{
 		produtoEntity.quantidadeDisponivel = dadosDoProduto.quantidadeDisponivel;
 		produtoEntity.descricao = dadosDoProduto.descricao;
 		produtoEntity.categoria = dadosDoProduto.categoria;
-		produtoEntity.caracteristicas = dadosDoProduto.caracteristicas
-		produtoEntity.imagens = dadosDoProduto.imagens
+
+		const produtoCaracteristicasEntidade = dadosDoProduto.caracteristicas.map((caracteristicas) => {
+
+			const produtoCaracteristicasEntity = new ProdutoCaracteristicaEntity();
+
+			produtoCaracteristicasEntity.nome = caracteristicas.nome;
+			produtoCaracteristicasEntity.descricao = caracteristicas.descricao;
+
+			return produtoCaracteristicasEntity;
+
+		})
+
+		const produtoImagensEntidade = dadosDoProduto.imagens.map((imagens) => {
+
+			const produtoImagensEntity = new ProdutoImagemEntity();
+
+			produtoImagensEntity.url = imagens.url;
+			produtoImagensEntity.descricao = imagens.descricao;
+
+			return produtoImagensEntity;
+
+		})
+
+		produtoEntity.caracteristicas = produtoCaracteristicasEntidade;
+		produtoEntity.imagens = produtoImagensEntidade;
 				
 		return await this.produtoRepository.save(produtoEntity);
 	}
@@ -37,7 +62,16 @@ export class ProdutoService{
 
 		const produtosLista = produtosSalvos.map(
 			
-			(produto) => new ListarProdutoDTO(produto.id, produto.nome, produto.caracteristicas, produto.imagens)
+			(produto) => new ListarProdutoDTO(
+				
+				produto.id, 
+				produto.nome, 
+				produto.valor,
+				produto.quantidadeDisponivel,
+				produto.caracteristicas, 
+				produto.imagens
+				
+			)
 		);
 
 		return produtosLista;
@@ -45,25 +79,31 @@ export class ProdutoService{
 
 	async atualizarProduto(id: string, dadosDeAtualizacao: AtualizarProdutoDTO){
 
-		const pedido = await this.produtoRepository.findOneBy({id: id});
+		const produto = await this.produtoRepository.findOneBy({id: id});
 
-		if(!pedido){
+		if(!produto){
 			
 			throw new NotFoundException('Produto não encontrado');
 		}
 		
 		await this.produtoRepository.update(id, dadosDeAtualizacao);
+
+		const produtoAtualizado = await this.produtoRepository.findOneBy({id: id});
+		
+		return produtoAtualizado;
 	}
 
 	async deletarProduto(id: string){
 
-		const pedido = await this.produtoRepository.findOneBy({id: id});
+		const produto = await this.produtoRepository.findOneBy({id: id});
 
-		if(!pedido){
+		if(!produto){
 
 			throw new NotFoundException('Produto não encontrado');
 		}
 
 		await this.produtoRepository.delete(id);
+
+		return produto
 	}
 }

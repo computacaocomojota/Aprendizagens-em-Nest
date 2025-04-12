@@ -1,3 +1,4 @@
+import { ItemPedidoEntity } from "src/pedidos/itempedido.entity";
 import { ProdutoCaracteristicaEntity } from "./produto-caracteristica.entity";
 import { ProdutoImagemEntity } from "./produto-imagem.entity";
 
@@ -49,5 +50,9 @@ export class ProdutoEntity{
 	@OneToMany(() => ProdutoImagemEntity,(produtoImagemEntity) => produtoImagemEntity.produto,
 	{cascade: true, eager: true})
 	imagens: ProdutoImagemEntity[];
+
+	@OneToMany(() => ItemPedidoEntity, (itemPedidoEntity) => itemPedidoEntity.produto,
+	{cascade: true})
+	itensPedido: ItemPedidoEntity[];
 
 }

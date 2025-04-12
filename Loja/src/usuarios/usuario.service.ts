@@ -51,6 +51,10 @@ export class UsuarioService{
 		}
 		
 		await this.usuarioRepository.update(id, dadosDeAtualizacao);
+	
+		const usuarioAtualizado = await this.usuarioRepository.findOneBy({id: id});
+
+		return usuarioAtualizado;
 	}
 
 	async deletarUsuario(id: string){
@@ -63,5 +67,7 @@ export class UsuarioService{
 		}
 		
 		await this.usuarioRepository.delete(id);
+
+		return usuario
 	}
 }

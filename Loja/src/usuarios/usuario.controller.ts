@@ -25,7 +25,7 @@ export class UsuarioController {
 
 		return {
 
-			usuario: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome),
+			usuarioSalvo: new ListarUsuarioDTO(usuarioSalvo.id, usuarioSalvo.nome),
 			messagem: 'Usuário criado com sucesso'
 		};
 	}
@@ -44,7 +44,7 @@ export class UsuarioController {
 
 		return {
 
-			usuario: usuarioAtualizado,
+			usuarioAtualizado: usuarioAtualizado,
 			messagem: 'Usuário atualizado com sucesso'
 		}
 	}
@@ -56,7 +56,7 @@ export class UsuarioController {
 
 		return {
 
-			usuario: usuarioDeletado,
+			usuarioDeletado: usuarioDeletado,
 			messagem: 'Usuário deletado com sucesso'
 		}
 	}

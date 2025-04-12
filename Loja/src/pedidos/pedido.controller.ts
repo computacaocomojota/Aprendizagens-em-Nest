@@ -1,11 +1,13 @@
 import { 
+
   Controller, 
   Post, 
   Body,
   Get,
-  Put,
   Param,
-  Delete
+  Delete,
+  Patch
+  
 } from '@nestjs/common';
 
 import { PedidosService } from './pedido.service';
@@ -25,22 +27,23 @@ export class PedidoController {
 
     return {
 
-      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.id, pedidoSalvo.valorTotal,pedidoSalvo.status),
+      pedidoSalvo: new ListarPedidoDTO(pedidoSalvo.id, pedidoSalvo.valorTotal,pedidoSalvo.status, pedidoSalvo.itensPedido),
+      
       message: 'Pedido criado com sucesso',
     }
   }
 
   @Get()
-  async listarPedidos(@Param('usuarioId') usuarioId: string){
+  async listarPedidos(){
 
-    return await this.pedidoService.listarPedido(usuarioId)
+    return await this.pedidoService.listarPedido()
   }
 
 
-  @Put('/:pedidoId')
-  async atualizarPedido(@Param('usuarioId') usuarioId: string, @Param('pedidoId') pedidoId: string, @Body() dadosDeAtualizacao: AtualizarPedidoDTO){
+  @Patch('/:id')
+  async atualizarPedido(@Param('id') id: string, @Body() dadosDeAtualizacao: AtualizarPedidoDTO){
 
-    const pedidoAualizado = await this.pedidoService.atualizarPedido(usuarioId, pedidoId, dadosDeAtualizacao)
+    const pedidoAualizado = await this.pedidoService.atualizarPedido(id, dadosDeAtualizacao)
 
     return {
 
@@ -49,10 +52,10 @@ export class PedidoController {
     }
   }
 
-  @Delete('/:pedidoId')
-  async deletarPedido(@Param('usuarioId') usuarioId: string, @Param('pedidoId') pedidoId: string){
+  @Delete('/:id')
+  async deletarPedido(@Param('id') id: string){
 
-    const pedidoDeletado = await this.pedidoService.deletarPedido(usuarioId, pedidoId)
+    const pedidoDeletado = await this.pedidoService.deletarPedido(id)
     
     return {
 

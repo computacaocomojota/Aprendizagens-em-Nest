@@ -1,5 +1,3 @@
-import { PedidoEntity } from "src/pedidos/pedido.entity";
-
 export class ListarUsuarioDTO {
 
 	constructor(

@@ -26,7 +26,7 @@ export class ProdutoController {
 
 		return{
 			
-			produto: produtoSalvo,
+			produtoSalvo: produtoSalvo,
 			mensagem: 'Produto criado com sucesso'
 		}
 		
@@ -47,7 +47,7 @@ export class ProdutoController {
 
 		return{
 
-			produto: produtoAtualizado,
+			produtoAtualizado: produtoAtualizado,
 			mensagem: 'Produto atualizado com sucesso'
 		}
 	}
@@ -59,7 +59,7 @@ export class ProdutoController {
 
 		return {
 
-			produto: produtoDeletado,
+			produtoDeletado: produtoDeletado,
 			mensagem: 'Produto deletado com sucesso'
 		}
 	}

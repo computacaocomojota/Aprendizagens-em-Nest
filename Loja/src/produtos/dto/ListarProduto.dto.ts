@@ -16,6 +16,8 @@ export class ListarProdutoDTO{
 
     readonly id: string,
     readonly nome: string,
+    readonly valor: number,
+    readonly quantidadeDisponivel: number,
     readonly caracteristicas: ListarCaracteristicaProdutoDTO[],
     readonly imagens: ListarImagemProdutoDTO[],
 

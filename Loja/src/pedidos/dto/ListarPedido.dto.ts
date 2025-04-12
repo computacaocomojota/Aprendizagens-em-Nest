@@ -1,5 +1,12 @@
 import { StatusPedido } from "../enum/statuspedido.enum";
 
+class ListarItemPedidoDTO{
+
+	id: string;
+	quantidade: number;
+	precoVenda: number;
+}
+
 export class ListarPedidoDTO{
 
 	constructor(
@@ -7,6 +14,7 @@ export class ListarPedidoDTO{
 		readonly id: string,
 		readonly valorTotal: number,
 		readonly status: StatusPedido,
+		readonly itensPedido: ListarItemPedidoDTO[],
 
 	){}
 }
