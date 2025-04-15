@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { UsuarioEntity } from '../usuarios/usuario.entity';
@@ -30,15 +30,19 @@ export class PedidosService {
 
     const usuario = await this.usuarioRepository.findOneBy({id: usuarioId})
 
-    const produtosIds = dadosDoPedido.itensPedido.map((itemPedido) => itemPedido.produtoId)
-
-    const produtosRelacionados = await this.produtoRepository.findBy({id: In(produtosIds)})
-
     if(!usuario){
       
       throw new NotFoundException('Usuario não encontrado')
     }
-    
+    const produtosIds = dadosDoPedido.itensPedido.map((itemPedido) => itemPedido.produtoId)
+
+    const produtosRelacionados = await this.produtoRepository.findBy({id: In(produtosIds)})
+
+    if(produtosRelacionados.length === 0){
+
+      throw new NotFoundException('Nenhum produto encontrado')
+    }
+
     const pedidoEntity = new PedidoEntity()
 
     pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
@@ -48,15 +52,20 @@ export class PedidosService {
 
       const produtoRelacionado = produtosRelacionados.find((produto) => produto.id === itemPedido.produtoId)
 
+      if(!produtoRelacionado){
+
+        throw new NotFoundException(`Produto com id ${itemPedido.produtoId} não encontrado`)
+      }
+
       const itemPedidoEntity = new ItemPedidoEntity()
 
       itemPedidoEntity.precoVenda = produtoRelacionado.valor
       itemPedidoEntity.quantidade = itemPedido.quantidade
       itemPedidoEntity.produto = produtoRelacionado
 
-      if(!(itemPedido.quantidade <= produtoRelacionado.quantidadeDisponivel)){
+      if(itemPedido.quantidade > produtoRelacionado.quantidadeDisponivel){
 
-        throw new NotFoundException(`Quantidade deseja de ${produtoRelacionado.nome} não disponível`)
+        throw new BadRequestException(`Quantidade deseja de ${produtoRelacionado.nome} não disponível`)
       }
 
       itemPedidoEntity.produto.quantidadeDisponivel -= itemPedido.quantidade
