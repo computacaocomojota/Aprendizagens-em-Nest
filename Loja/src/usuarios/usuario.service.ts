@@ -20,9 +20,7 @@ export class UsuarioService{
 
 		const usuarioEntity = new UsuarioEntity();
 
-		usuarioEntity.nome = dadosDoUsuario.nome;
-		usuarioEntity.email = dadosDoUsuario.email;
-		usuarioEntity.senha = dadosDoUsuario.senha;
+		Object.assign(usuarioEntity, dadosDoUsuario as UsuarioEntity);
 		
 		return await this.usuarioRepository.save(usuarioEntity);
 
@@ -50,23 +48,19 @@ export class UsuarioService{
 			throw new NotFoundException('Usuario não encontrado');
 		}
 		
-		await this.usuarioRepository.update(id, dadosDeAtualizacao);
-	
-		const usuarioAtualizado = await this.usuarioRepository.findOneBy({id: id});
+		Object.assign(usuario, dadosDeAtualizacao as UsuarioEntity);
 
-		return usuarioAtualizado;
+		return await this.usuarioRepository.save(usuario);
 	}
 
 	async deletarUsuario(id: string){
 
-		const usuario = await this.usuarioRepository.findOneBy({id: id});
+		const usuario = await this.usuarioRepository.delete(id);
 
-		if(!usuario){
+		if(!usuario.affected){
 
 			throw new NotFoundException('Usuario não encontrado');
 		}
-		
-		await this.usuarioRepository.delete(id);
 
 		return usuario
 	}

@@ -110,7 +110,7 @@ export class PedidosService {
       throw new NotFoundException('Pedido não encontrado')
     }
 
-    await this.pedidoRepository.update(id,dadosDeAtualizacao)
+    await this.pedidoRepository.update(id, dadosDeAtualizacao)
 
     const pedidoAtualizado = await this.pedidoRepository.findOneBy({id: id})
 
@@ -119,14 +119,12 @@ export class PedidosService {
 
   async deletarPedido(id: string){
 
-    const pedido = await this.pedidoRepository.findOneBy({id: id})
+    const pedido = await this.pedidoRepository.delete(id)
 
-    if(!pedido){
+    if(!pedido.affected){
 
       throw new NotFoundException('Pedido não encontrado')
     }
-
-    await this.pedidoRepository.delete(id)
 
     return pedido
   }

@@ -22,12 +22,6 @@ export class ProdutoService{
 
 		const produtoEntity = new ProdutoEntity();
 		
-		produtoEntity.nome = dadosDoProduto.nome;
-		produtoEntity.valor = dadosDoProduto.valor;
-		produtoEntity.quantidadeDisponivel = dadosDoProduto.quantidadeDisponivel;
-		produtoEntity.descricao = dadosDoProduto.descricao;
-		produtoEntity.categoria = dadosDoProduto.categoria;
-
 		const produtoCaracteristicasEntidade = dadosDoProduto.caracteristicas.map((caracteristicas) => {
 
 			const produtoCaracteristicasEntity = new ProdutoCaracteristicaEntity();
@@ -52,6 +46,8 @@ export class ProdutoService{
 
 		produtoEntity.caracteristicas = produtoCaracteristicasEntidade;
 		produtoEntity.imagens = produtoImagensEntidade;
+
+		Object.assign(produtoEntity, dadosDoProduto as ProdutoEntity);
 				
 		return await this.produtoRepository.save(produtoEntity);
 	}
@@ -86,23 +82,19 @@ export class ProdutoService{
 			throw new NotFoundException('Produto não encontrado');
 		}
 		
-		await this.produtoRepository.update(id, dadosDeAtualizacao);
+		Object.assign(produto, dadosDeAtualizacao as ProdutoEntity);
 
-		const produtoAtualizado = await this.produtoRepository.findOneBy({id: id});
-		
-		return produtoAtualizado;
+		return await this.produtoRepository.save(produto);
 	}
 
 	async deletarProduto(id: string){
 
-		const produto = await this.produtoRepository.findOneBy({id: id});
+		const produto = await this.produtoRepository.delete(id);
 
-		if(!produto){
-
+		if(!produto.affected){
+			
 			throw new NotFoundException('Produto não encontrado');
 		}
-
-		await this.produtoRepository.delete(id);
 
 		return produto
 	}

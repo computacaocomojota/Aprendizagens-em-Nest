@@ -6,7 +6,7 @@ import { ProdutoModule } from './produtos/produto.module';
 import { UsuarioModule } from './usuarios/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { PedidosModule } from './pedidos/pedido.module';
-import { FiltroDeExcecaoHTTP } from './filtros/filtros-de-excecao-http';
+import { FiltroDeExcecaoGlobal } from './filtros/filtros-de-excecao-global';
 @Module({
 
   imports: [
@@ -34,7 +34,7 @@ import { FiltroDeExcecaoHTTP } from './filtros/filtros-de-excecao-http';
 
     {
       provide: 'APP_FILTER',
-      useClass: FiltroDeExcecaoHTTP,
+      useClass: FiltroDeExcecaoGlobal,
     },
 
   ]
