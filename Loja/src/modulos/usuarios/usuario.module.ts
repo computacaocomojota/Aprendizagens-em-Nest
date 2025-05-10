@@ -9,8 +9,8 @@ import { ProdutoEntity } from "../produtos/produto.entity";
 
 @Module({
 
-	imports:[TypeOrmModule.forFeature([UsuarioEntity,ProdutoEntity])],
+	imports: [TypeOrmModule.forFeature([UsuarioEntity, ProdutoEntity])],
 	controllers: [UsuarioController],
-	providers: [UsuarioService,EmailEhUnicoValidator],
+	providers: [UsuarioService, EmailEhUnicoValidator],
 })
-export class UsuarioModule{}
+export class UsuarioModule { }

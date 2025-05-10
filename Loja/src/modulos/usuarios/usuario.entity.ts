@@ -26,13 +26,13 @@ export class UsuarioEntity {
 
 	@CreateDateColumn({ name: 'created_at' })
 	created_at: string;
-	
+
 	@UpdateDateColumn({ name: 'updated_at' })
 	updated_at: string;
-	
+
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deleted_at: string;
 
-	@OneToMany(() => PedidoEntity, (pedidoEntity) => pedidoEntity.usuario, {cascade: true})
+	@OneToMany(() => PedidoEntity, (pedidoEntity) => pedidoEntity.usuario, { cascade: true })
 	pedidos: PedidoEntity[];
 }

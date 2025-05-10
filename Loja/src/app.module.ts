@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ProdutoModule } from './produtos/produto.module';
-import { UsuarioModule } from './usuarios/usuario.module';
+import { ProdutoModule } from './modulos/produtos/produto.module';
+import { UsuarioModule } from './modulos/usuarios/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
-import { PedidosModule } from './pedidos/pedido.module';
-import { FiltroDeExcecaoGlobal } from './filtros/filtros-de-excecao-global';
+import { PedidosModule } from './modulos/pedidos/pedido.module';
+import { FiltroDeExcecaoGlobal } from './recursos/filtros/filtros-de-excecao-global';
 @Module({
 
   imports: [
@@ -16,7 +16,7 @@ import { FiltroDeExcecaoGlobal } from './filtros/filtros-de-excecao-global';
     PedidosModule,
 
     ConfigModule.forRoot({
-      
+
       isGlobal: true,
 
     }),
@@ -27,7 +27,7 @@ import { FiltroDeExcecaoGlobal } from './filtros/filtros-de-excecao-global';
       inject: [PostgresConfigService],
 
     }),
-    
+
   ],
 
   providers: [
@@ -39,4 +39,4 @@ import { FiltroDeExcecaoGlobal } from './filtros/filtros-de-excecao-global';
 
   ]
 })
-export class AppModule {}
+export class AppModule { }

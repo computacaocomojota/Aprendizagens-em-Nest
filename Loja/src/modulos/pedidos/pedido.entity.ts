@@ -1,12 +1,12 @@
-import { 
-	Column, 
-	CreateDateColumn, 
-	DeleteDateColumn, 
-	Entity, 
-	ManyToOne, 
-	OneToMany, 
-	PrimaryGeneratedColumn, 
-	UpdateDateColumn 
+import {
+	Column,
+	CreateDateColumn,
+	DeleteDateColumn,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn
 } from "typeorm";
 
 import { UsuarioEntity } from "../usuarios/usuario.entity";
@@ -34,11 +34,11 @@ export class PedidoEntity {
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deletedAt: string;
 
-	@OneToMany(() => ItemPedidoEntity,(itemPedidoEntity) => itemPedidoEntity.pedido,
-	{cascade: true, eager: true})
+	@OneToMany(() => ItemPedidoEntity, (itemPedidoEntity) => itemPedidoEntity.pedido,
+		{ cascade: true, eager: true })
 	itensPedido: ItemPedidoEntity[];
 
 	@ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.pedidos,
-	{orphanedRowAction: 'delete',onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+		{ orphanedRowAction: 'delete', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 	usuario: UsuarioEntity;
 }
