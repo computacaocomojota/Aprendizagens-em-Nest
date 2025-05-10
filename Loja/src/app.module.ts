@@ -7,6 +7,8 @@ import { UsuarioModule } from './modulos/usuarios/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { PedidosModule } from './modulos/pedidos/pedido.module';
 import { FiltroDeExcecaoGlobal } from './recursos/filtros/filtros-de-excecao-global';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 @Module({
 
   imports: [
@@ -28,6 +30,17 @@ import { FiltroDeExcecaoGlobal } from './recursos/filtros/filtros-de-excecao-glo
 
     }),
 
+    CacheModule.registerAsync({ 
+      
+      useFactory: async () => ({
+
+        store: await redisStore({ ttl: 10 * 1000 })
+
+      }),
+
+      isGlobal: true,
+
+    }),
   ],
 
   providers: [
@@ -39,4 +52,4 @@ import { FiltroDeExcecaoGlobal } from './recursos/filtros/filtros-de-excecao-glo
 
   ]
 })
-export class AppModule { }
+export class AppModule{}

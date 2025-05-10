@@ -73,6 +73,24 @@ export class ProdutoService{
 		return produtosLista;
 	}
 
+	async listarProdutoPorId(id: string){
+
+		const produto = await this.produtoRepository.findOneBy({id: id});
+
+		const produtoListado = new ListarProdutoDTO(
+			
+			produto.id, 
+			produto.nome, 
+			produto.valor, 
+			produto.quantidadeDisponivel, 
+			produto.caracteristicas, 
+			produto.imagens
+
+		);
+
+		return produtoListado;
+	}
+
 	async atualizarProduto(id: string, dadosDeAtualizacao: AtualizarProdutoDTO){
 
 		const produto = await this.produtoRepository.findOneBy({id: id});
